@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { readCartCount, subscribeCart } from "@/lib/cart";
+import { openCart, readCartCount, subscribeCart } from "@/lib/cart";
 import { createClient } from "@/lib/supabase/client";
 
 const links = [
@@ -17,8 +17,10 @@ const links = [
 function CartIcon() {
   const count = useSyncExternalStore(subscribeCart, readCartCount, () => 0);
   return (
-    <Link
-      href="/cart"
+    <button
+      type="button"
+      onClick={openCart}
+      aria-haspopup="dialog"
       aria-label={count ? `Cart, ${count} item${count === 1 ? "" : "s"}` : "Cart, empty"}
       className="relative flex h-11 w-11 items-center justify-center rounded-full text-ivory hover:text-gold"
     >
@@ -32,7 +34,7 @@ function CartIcon() {
           {count}
         </span>
       )}
-    </Link>
+    </button>
   );
 }
 

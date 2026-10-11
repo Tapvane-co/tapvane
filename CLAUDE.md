@@ -39,6 +39,12 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - `/customise` and `/cart` are temporary placeholders until Stage 7. Cart is kept in browser storage under `tapvane-cart` (`src/lib/cart.ts`). `/terms` and `/privacy` are built in Stage 10.
 - `CardMockup` (card front/back) and `TapDemo` (looping tap animation) are reusable components.
 
+## Card designer & cart (Stage 7)
+- SQL: `supabase/stage7-designer.sql` adds `card_templates`, `card_colours`, `stock` (blank stock quantity = not counting yet). Layout names are fixed in code (`classic`, `centred`, `monogram`); admin can add templates only using those layouts. Premium templates and the matte finish are Pro only.
+- `src/lib/shop.ts` = shared types + rules (stock status, cart parsing/validation, `formatNaira`); `src/lib/shop-data.ts` = cached DB readers (tag `"shop"`, call `updateTag("shop")` after admin edits); `src/lib/shop-actions.ts` = server action the cart uses to get real prices/stock.
+- Cart lives in browser storage (`src/lib/cart.ts`) and stores only choices (package slug, template/colour/finish slugs, card text) — never prices. Checkout (Stage 8) must re-read prices and stock from the database on the server and save a full snapshot of each design with the order. Card text limits: name 26, title 24, company 24.
+- Cart icon opens a side panel (`CartDrawer`); `/cart` shows the same `CartContents`. `/checkout` is a temporary placeholder until Stage 8.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.

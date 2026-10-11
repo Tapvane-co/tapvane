@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import CartDrawer from "@/components/CartDrawer";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -17,6 +18,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Suspense fallback={null}>
         <WhatsAppButton />
       </Suspense>
+      <CartDrawer />
     </>
   );
 }

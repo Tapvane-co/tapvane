@@ -1,17 +1,12 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
+import type { Product } from "@/lib/shop";
 
 // Site-wide data that the founder can change in admin: prices and settings.
 // Both are read from the database and remembered for a short while so pages stay fast.
 // After an admin edit, call updateTag("products") or updateTag("settings") to refresh at once (Stage 9).
 
-export type Product = {
-  slug: string;
-  name: string;
-  type: "basic" | "pro" | "business" | "tag";
-  cardsIncluded: number;
-  price: number;
-};
+export type { Product } from "@/lib/shop";
 
 export type Settings = {
   whatsappNumber: string; // as shown to people, e.g. "+234 902 591 8252"
@@ -37,11 +32,11 @@ const defaultSettings: Settings = {
 // Prices are never hard-coded for real visitors. These stand-ins exist ONLY on the developer's
 // computer, so the pages can be previewed before the database file has been run.
 const devOnlyProducts: Product[] = [
-  { slug: "basic", name: "Basic", type: "basic", cardsIncluded: 1, price: 18000 },
-  { slug: "pro", name: "Pro", type: "pro", cardsIncluded: 1, price: 30000 },
-  { slug: "business-5", name: "Business 5", type: "business", cardsIncluded: 5, price: 80000 },
-  { slug: "business-10", name: "Business 10", type: "business", cardsIncluded: 10, price: 150000 },
-  { slug: "tag", name: "NFC Tag", type: "tag", cardsIncluded: 1, price: 10000 },
+  { slug: "basic", name: "Basic", type: "basic", itemType: "pvc", cardsIncluded: 1, price: 18000 },
+  { slug: "pro", name: "Pro", type: "pro", itemType: "premium", cardsIncluded: 1, price: 30000 },
+  { slug: "business-5", name: "Business 5", type: "business", itemType: "pvc", cardsIncluded: 5, price: 80000 },
+  { slug: "business-10", name: "Business 10", type: "business", itemType: "pvc", cardsIncluded: 10, price: 150000 },
+  { slug: "tag", name: "NFC Tag", type: "tag", itemType: "tag", cardsIncluded: 1, price: 10000 },
 ];
 
 export async function getProducts(): Promise<Product[] | null> {
@@ -51,7 +46,7 @@ export async function getProducts(): Promise<Product[] | null> {
 
   const { data, error } = await createPublicClient()
     .from("products")
-    .select("slug, name, type, cards_included, price")
+    .select("slug, name, type, item_type, cards_included, price")
     .eq("is_active", true)
     .order("sort_order");
 
@@ -62,6 +57,7 @@ export async function getProducts(): Promise<Product[] | null> {
     slug: r.slug,
     name: r.name,
     type: r.type,
+    itemType: r.item_type,
     cardsIncluded: r.cards_included,
     price: r.price,
   }));
@@ -98,9 +94,7 @@ export async function getCurrentYear(): Promise<number> {
   return new Date().getFullYear();
 }
 
-export function formatNaira(amount: number) {
-  return "₦" + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+export { formatNaira } from "@/lib/shop";
 
 // Turns "+234 902 591 8252" into a WhatsApp link, with an optional ready-typed message.
 export function whatsappLink(number: string, message?: string) {

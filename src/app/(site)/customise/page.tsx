@@ -1,19 +1,28 @@
-import Link from "next/link";
+import { Suspense } from "react";
+import Customiser from "@/components/Customiser";
+import { getShopData } from "@/lib/shop-data";
 
 export const metadata = {
   title: "Design your card | Tapvane",
-  robots: { index: false },
+  description: "Choose a template, colour and finish, add your name, and see your Tapvane card update as you go.",
 };
 
-// Temporary page. The real card designer with live preview is built in Stage 7.
-export default function CustomisePage() {
+async function Designer({ searchParams }: { searchParams: PageProps<"/customise">["searchParams"] }) {
+  const { package: pkg } = await searchParams;
+  const wanted = Array.isArray(pkg) ? pkg[0] : pkg;
+  const data = await getShopData();
+  return <Customiser data={data} initialPackage={wanted ?? "basic"} />;
+}
+
+export default function CustomisePage(props: PageProps<"/customise">) {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-4 px-6 py-16 text-center">
-      <h1 className="font-display text-3xl text-ivory">Design your card</h1>
-      <p className="text-muted">The card designer is coming soon. To order now, chat with us on WhatsApp.</p>
-      <Link href="/contact" className="flex min-h-12 items-center justify-center rounded-full bg-gold px-8 font-semibold text-onyx">
-        Contact us
-      </Link>
+    <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
+      <h1 className="font-display text-4xl text-ivory md:text-5xl">Design your card</h1>
+      <div className="mt-8">
+        <Suspense fallback={<div className="h-96 rounded-2xl border border-line-subtle" />}>
+          <Designer searchParams={props.searchParams} />
+        </Suspense>
+      </div>
     </main>
   );
 }
