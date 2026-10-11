@@ -32,6 +32,13 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - `/c/[code]` reads cards only through the `lookup_card(code)` function, so visitors can never list cards. Admin-made walk-in profiles have `owner_user_id` null.
 - Test cards `TVN-DEMO1` / `TVN-NEW01` / `TVN-OFF01` and profile `demo` are built-in samples in `src/lib/`.
 
+## Public site (Stage 6)
+- Marketing pages live in `src/app/(site)/` and share the menu, footer and floating WhatsApp button (`SiteHeader`, `SiteFooter`, `WhatsAppButton`). Profiles, login, dashboard and admin sit outside it.
+- Prices come from the `products` table and contact/delivery details from `settings` (`supabase/stage6-content.sql`), read through cached helpers in `src/lib/site.ts`. After an admin edit call `updateTag("products")` / `updateTag("settings")`. Dev-only stand-in prices exist for when the table is missing; in production a missing table shows "prices not available".
+- Page copy is in `src/lib/content.ts` (from CONTENT.md). Instagram handle and opening hours are empty settings; the Contact page hides those lines until set.
+- `/customise` and `/cart` are temporary placeholders until Stage 7. Cart is kept in browser storage under `tapvane-cart` (`src/lib/cart.ts`). `/terms` and `/privacy` are built in Stage 10.
+- `CardMockup` (card front/back) and `TapDemo` (looping tap animation) are reusable components.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.
