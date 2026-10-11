@@ -38,6 +38,32 @@ function Message({ kind, children }: { kind: "error" | "ok"; children: ReactNode
   );
 }
 
+// Password box with a Show/Hide button, so people can check what they typed.
+function PasswordInput({ autoComplete, minLength }: { autoComplete: string; minLength?: number }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        name="password"
+        type={visible ? "text" : "password"}
+        required
+        minLength={minLength}
+        autoComplete={autoComplete}
+        className={`${inputClass} pr-20`}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        aria-label={visible ? "Hide password" : "Show password"}
+        aria-pressed={visible}
+        className="absolute inset-y-0 right-0 min-w-16 px-4 text-sm text-gold"
+      >
+        {visible ? "Hide" : "Show"}
+      </button>
+    </div>
+  );
+}
+
 function friendly(message: string) {
   if (/invalid login/i.test(message)) return "Email or password is not correct.";
   if (/already registered/i.test(message)) return "That email already has an account. Try logging in.";
@@ -97,7 +123,7 @@ export function SignupForm() {
         </label>
         <label className="flex flex-col gap-2 text-sm text-muted">
           Password (at least 8 characters)
-          <input name="password" type="password" required minLength={8} autoComplete="new-password" className={inputClass} />
+          <PasswordInput autoComplete="new-password" minLength={8} />
         </label>
         <label className="flex items-start gap-3 text-sm text-muted">
           <input name="consent" type="checkbox" required className="mt-1 h-4 w-4 accent-[#C9A34E]" />
@@ -150,7 +176,7 @@ export function LoginForm() {
         </label>
         <label className="flex flex-col gap-2 text-sm text-muted">
           Password
-          <input name="password" type="password" required autoComplete="current-password" className={inputClass} />
+          <PasswordInput autoComplete="current-password" />
         </label>
         {error && <Message kind="error">{error}</Message>}
         <button type="submit" disabled={busy} className={primaryButton}>
@@ -243,7 +269,7 @@ export function ResetPasswordForm() {
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-2 text-sm text-muted">
             New password (at least 8 characters)
-            <input name="password" type="password" required minLength={8} autoComplete="new-password" className={inputClass} />
+            <PasswordInput autoComplete="new-password" minLength={8} />
           </label>
           {error && <Message kind="error">{error}</Message>}
           <button type="submit" disabled={busy} className={primaryButton}>
