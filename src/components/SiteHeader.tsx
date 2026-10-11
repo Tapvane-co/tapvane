@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { openCart, readCartCount, subscribeCart } from "@/lib/cart";
-import { createClient } from "@/lib/supabase/client";
+
+// Whether a login cookie is present. (Checking this directly means the whole login library
+// does not have to be downloaded on every page just to choose between "Log in" and "My account".)
+const noopSubscribe = () => () => {};
+const hasLoginCookie = () => /(?:^|;\s*)sb-[^=]*-auth-token/.test(document.cookie);
 
 const links = [
   { href: "/", label: "Home" },
@@ -40,20 +44,15 @@ function CartIcon() {
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const supabase = useMemo(() => createClient(), []);
   const [open, setOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setLoggedIn(!!data.session));
-  }, [supabase]);
+  const loggedIn = useSyncExternalStore(noopSubscribe, hasLoginCookie, () => false);
 
   const account = loggedIn ? { href: "/dashboard", label: "My account" } : { href: "/login", label: "Log in" };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line-subtle bg-onyx/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line-subtle bg-onyx">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
-        <Link href="/" className="font-display text-lg uppercase tracking-[0.3em] text-gold">
+        <Link href="/" className="flex min-h-11 items-center font-display text-lg uppercase tracking-[0.3em] text-gold">
           Tapvane
         </Link>
 

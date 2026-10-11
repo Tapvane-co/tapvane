@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import CardMockup from "@/components/CardMockup";
 import { icons } from "@/components/icons";
 
@@ -20,12 +20,23 @@ const reducedMotionNow = () => window.matchMedia("(prefers-reduced-motion: reduc
 export default function TapDemo({ className = "" }: { className?: string }) {
   const reduced = useSyncExternalStore(subscribeReducedMotion, reducedMotionNow, () => false);
   const [step, setStep] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+
+  // Only animate while the demo is actually on screen, so it never costs anything when scrolled away.
+  useEffect(() => {
+    const el = root.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || !visible) return;
     const id = setInterval(() => setStep((s) => (s + 1) % captions.length), STEP_MS);
     return () => clearInterval(id);
-  }, [reduced]);
+  }, [reduced, visible]);
 
   const shown = reduced ? 1 : step;
   const profileOpen = shown >= 1;
@@ -33,7 +44,7 @@ export default function TapDemo({ className = "" }: { className?: string }) {
   const saved = shown === 3;
 
   return (
-    <div className={`mx-auto w-full max-w-[360px] ${className}`}>
+    <div ref={root} className={`mx-auto w-full max-w-[360px] ${className}`}>
       <div
         className="relative h-[400px] w-full"
         role="img"
@@ -54,7 +65,7 @@ export default function TapDemo({ className = "" }: { className?: string }) {
 
           {/* The opened profile */}
           <div
-            className={`absolute inset-0 flex flex-col transition-all duration-500 motion-reduce:transition-none ${
+            className={`absolute inset-0 flex flex-col transition-[opacity,translate] duration-500 motion-reduce:transition-none ${
               profileOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
             }`}
           >
@@ -73,7 +84,7 @@ export default function TapDemo({ className = "" }: { className?: string }) {
                 ))}
               </div>
               <span
-                className={`mt-auto flex h-10 items-center justify-center rounded-full bg-gold text-xs font-semibold text-onyx transition-all duration-300 motion-reduce:transition-none ${
+                className={`mt-auto flex h-10 items-center justify-center rounded-full bg-gold text-xs font-semibold text-onyx transition-[scale] duration-300 motion-reduce:transition-none ${
                   saving ? "scale-95 ring-4 ring-gold/40" : ""
                 }`}
               >
@@ -84,7 +95,7 @@ export default function TapDemo({ className = "" }: { className?: string }) {
 
           {/* "Contact saved" message */}
           <div
-            className={`absolute inset-x-3 bottom-16 flex items-center justify-center gap-2 rounded-full border border-gold bg-charcoal px-3 py-2 text-xs text-ivory transition-all duration-500 motion-reduce:transition-none ${
+            className={`absolute inset-x-3 bottom-16 flex items-center justify-center gap-2 rounded-full border border-gold bg-charcoal px-3 py-2 text-xs text-ivory transition-[opacity,translate] duration-500 motion-reduce:transition-none ${
               saved ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
           >
@@ -94,11 +105,11 @@ export default function TapDemo({ className = "" }: { className?: string }) {
 
         {/* The card: slides up to the phone for the tap, then rests */}
         <div
-          className={`absolute bottom-8 left-0 w-[210px] transition-all duration-700 ease-out motion-reduce:transition-none ${
+          className={`absolute bottom-8 left-0 w-[210px] transition-[translate,rotate] duration-700 ease-out motion-reduce:transition-none ${
             shown === 0 ? "z-20 translate-x-14 -translate-y-24 -rotate-3" : "z-0 -translate-x-5 translate-y-4 -rotate-12"
           }`}
         >
-          <CardMockup />
+          <CardMockup width={210} />
           {shown === 0 && !reduced && (
             <span className="pointer-events-none absolute -right-3 top-1/2 h-12 w-12 -translate-y-1/2 animate-ping rounded-full border border-gold" />
           )}

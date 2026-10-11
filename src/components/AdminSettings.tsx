@@ -19,6 +19,13 @@ const groups: { title: string; intro?: string; fields: Field[] }[] = [
     ],
   },
   {
+    title: "Business details",
+    intro: "Shown in the Terms of Service and Privacy Policy.",
+    fields: [
+      { key: "legal_business_name", label: "Registered business name and RC/BN number", placeholder: "Example Ventures (BN 1234567)", hint: "Leave blank if you are not registered yet; the pages will then just say Tapvane." },
+    ],
+  },
+  {
     title: "Pickup and delivery",
     fields: [
       { key: "pickup_address", label: "Pickup address", multiline: true },

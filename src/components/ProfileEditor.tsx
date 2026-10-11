@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
+import DeleteAccount from "@/components/DeleteAccount";
 import ProfileView from "@/components/ProfileView";
 import { inputClass, primaryButton } from "@/components/AuthForms";
 import {
@@ -359,6 +360,8 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
           </div>
         </aside>
       </div>
+
+      {!isAdminMode && userId && <DeleteAccount userId={userId} />}
     </main>
   );
 }

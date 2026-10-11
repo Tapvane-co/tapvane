@@ -4,6 +4,7 @@ import FaqList from "@/components/FaqList";
 import PackageCards from "@/components/PackageCards";
 import TapDemo from "@/components/TapDemo";
 import { homeSteps, trustStrip, whyTapvane } from "@/lib/content";
+import { getSettings } from "@/lib/site";
 
 export const metadata = {
   title: "Tapvane | Tap. Share. Connect.",
@@ -11,14 +12,36 @@ export const metadata = {
     "The smart business card for Nigerian professionals and businesses. One tap shares your phone number, WhatsApp, socials and more. No app needed.",
 };
 
+// Sections far below the screen are only laid out once a visitor scrolls near them (faster first load).
+const lazy = "[content-visibility:auto] [contain-intrinsic-size:auto_500px]";
+
 const primaryLink =
   "flex min-h-12 items-center justify-center rounded-full bg-gold px-8 font-semibold text-onyx hover:brightness-110";
 const secondaryLink =
   "flex min-h-12 items-center justify-center rounded-full border border-gold px-8 font-semibold text-ivory hover:bg-gold/10";
 
+// Tells search engines who we are (Organization details).
+async function OrganizationData() {
+  const s = await getSettings();
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Tapvane",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://tapvane.com",
+    description: "NFC business cards and tags that open a digital profile with one tap.",
+    email: s.contactEmail,
+    telephone: s.whatsappNumber,
+    address: { "@type": "PostalAddress", addressLocality: "Makurdi", addressRegion: "Benue State", addressCountry: "NG" },
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
+}
+
 export default function Home() {
   return (
     <main className="flex-1">
+      <Suspense fallback={null}>
+        <OrganizationData />
+      </Suspense>
       {/* Hero */}
       <section className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-12 pt-12 lg:grid-cols-2 lg:pt-20">
         <div>
@@ -52,7 +75,7 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="mx-auto w-full max-w-6xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-6xl px-6 pt-20 ${lazy}`}>
         <h2 className="font-display text-3xl text-ivory md:text-4xl">As easy as one tap</h2>
         <ol className="mt-8 grid gap-5 md:grid-cols-3">
           {homeSteps.map((s, i) => (
@@ -66,7 +89,7 @@ export default function Home() {
       </section>
 
       {/* Why Tapvane */}
-      <section className="mx-auto w-full max-w-6xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-6xl px-6 pt-20 ${lazy}`}>
         <h2 className="font-display text-3xl text-ivory md:text-4xl">One card. Endless first impressions.</h2>
         <ul className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
           {whyTapvane.map((w) => (
@@ -79,7 +102,7 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="mx-auto w-full max-w-6xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-6xl px-6 pt-20 ${lazy}`}>
         <h2 className="font-display text-3xl text-ivory md:text-4xl">Choose your package</h2>
         <div className="mt-10">
           <Suspense fallback={<div className="h-72 rounded-2xl border border-line-subtle" />}>
@@ -89,7 +112,7 @@ export default function Home() {
       </section>
 
       {/* For small businesses */}
-      <section className="mx-auto w-full max-w-6xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-6xl px-6 pt-20 ${lazy}`}>
         <div className="rounded-3xl border border-line bg-charcoal p-8 md:p-12">
           <h2 className="font-display text-3xl text-ivory md:text-4xl">Turn every tap into a customer</h2>
           <p className="mt-4 max-w-3xl text-muted">
@@ -104,7 +127,7 @@ export default function Home() {
       </section>
 
       {/* Live profile demo */}
-      <section className="mx-auto w-full max-w-6xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-6xl px-6 pt-20 ${lazy}`}>
         <h2 className="font-display text-3xl text-ivory md:text-4xl">See what people see when you tap</h2>
         <p className="mt-4 max-w-2xl text-muted">
           Open a sample Tapvane profile on your phone. This is exactly what your contacts will get.
@@ -115,14 +138,14 @@ export default function Home() {
       </section>
 
       {/* FAQ preview */}
-      <section className="mx-auto w-full max-w-3xl px-6 pt-20">
+      <section className={`mx-auto w-full max-w-3xl px-6 pt-20 ${lazy}`}>
         <h2 className="font-display text-3xl text-ivory md:text-4xl">Frequently asked questions</h2>
         <div className="mt-8">
           <Suspense fallback={<div className="h-72 rounded-2xl border border-line-subtle" />}>
             <FaqList limit={4} />
           </Suspense>
         </div>
-        <Link href="/faq" className="mt-6 inline-flex min-h-11 items-center text-gold underline-offset-4 hover:underline">
+        <Link href="/faq" className="mt-6 inline-flex min-h-11 items-center text-gold underline-offset-4 hover:underline" prefetch={false}>
           See all questions →
         </Link>
       </section>

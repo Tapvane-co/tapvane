@@ -22,6 +22,7 @@ export function Thumb({ item, data }: { item: CartItem; data: ShopData }) {
   return (
     <div className="w-24 shrink-0">
       <CardMockup
+        width={96}
         layout={template?.layout}
         colours={colours}
         finish={d.finish}

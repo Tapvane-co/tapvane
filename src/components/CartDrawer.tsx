@@ -1,8 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import CartContents from "@/components/CartContents";
 import { onOpenCart } from "@/lib/cart";
+
+// The cart list is only downloaded the first time someone opens the cart.
+const CartContents = dynamic(() => import("@/components/CartContents"), {
+  ssr: false,
+  loading: () => <p className="py-6 text-muted">Loading…</p>,
+});
 
 // The cart side panel, opened from the cart icon in the menu (or after "Add to cart").
 export default function CartDrawer() {

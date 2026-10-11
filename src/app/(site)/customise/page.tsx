@@ -19,7 +19,7 @@ export default function CustomisePage(props: PageProps<"/customise">) {
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
       <h1 className="font-display text-4xl text-ivory md:text-5xl">Design your card</h1>
       <div className="mt-8">
-        <Suspense fallback={<div className="h-96 rounded-2xl border border-line-subtle" />}>
+        <Suspense fallback={<div className="min-h-[760px] rounded-2xl border border-line-subtle" />}>
           <Designer searchParams={props.searchParams} />
         </Suspense>
       </div>

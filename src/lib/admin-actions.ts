@@ -201,6 +201,7 @@ export async function saveColour(input: {
 const settingKeys = [
   "whatsapp_number", "contact_email", "instagram_handle", "opening_hours", "pickup_address",
   "delivery_fee_makurdi", "delivery_fee_nationwide", "bank_name", "bank_account_name", "bank_account_number",
+  "legal_business_name",
 ] as const;
 
 export async function saveSettings(values: Record<string, string>): Promise<Result> {
@@ -219,7 +220,7 @@ export async function saveSettings(values: Record<string, string>): Promise<Resu
   const bankFilled = [v.bank_name, v.bank_account_name, v.bank_account_number].filter(Boolean).length;
   if (bankFilled !== 0 && bankFilled !== 3) return { ok: false, error: "Please fill in all three bank details, or leave all three blank." };
   if (v.bank_account_number && !/^[0-9 ]{6,20}$/.test(v.bank_account_number)) return { ok: false, error: "The account number should be digits only." };
-  if (v.instagram_handle.length > 100 || v.opening_hours.length > 200 || v.pickup_address.length > 300) {
+  if (v.instagram_handle.length > 100 || v.opening_hours.length > 200 || v.pickup_address.length > 300 || v.legal_business_name.length > 200) {
     return { ok: false, error: "One of the entries is too long." };
   }
 

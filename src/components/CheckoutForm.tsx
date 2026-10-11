@@ -248,7 +248,7 @@ export default function CheckoutForm() {
               {!canTransfer && (
                 <p className="mt-3 text-sm text-muted">
                   Bank transfer details are not available yet.{" "}
-                  <a href={whatsappLink(ctx.whatsappNumber)} target="_blank" rel="noopener noreferrer" className="text-gold underline-offset-4 hover:underline">
+                  <a href={whatsappLink(ctx.whatsappNumber)} target="_blank" rel="noopener noreferrer" className="text-gold underline underline-offset-4">
                     Chat with us on WhatsApp
                   </a>{" "}
                   to arrange payment.

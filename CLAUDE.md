@@ -61,6 +61,13 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Admin action tests (43 checks, fake database) and PGlite SQL tests live outside the project in the session scratch folder; re-create them if admin-actions.ts or the SQL changes.
 - `/admin/customers` from the PRD is not built; customers appear via Orders and Profiles.
 
+## Polish (Stage 10)
+- SQL: `supabase/stage10-polish.sql` adds the `legal_business_name` setting and `delete_my_account()` (customer self-delete: login + profile removed, active cards go back to "unassigned", orders KEPT with no login link; admins cannot use it). Tested on PGlite (12 checks). Dashboard has a "Delete my account" section (`DeleteAccount.tsx`).
+- `/terms` and `/privacy` come from CONTENT.md sections 12-13 (drafts; founder must have a Nigerian lawyer review). Business name/email/WhatsApp are read from Settings; date is `LEGAL_UPDATED` in `src/lib/legal.ts` (update when wording changes). Deviations from the draft: cookies section also mentions the cart stored in the browser; rights section mentions self-service account deletion; retention says "for example 6 years".
+- SEO/sharing: `metadataBase` from `NEXT_PUBLIC_SITE_URL` (MUST be https://tapvane.com in production), `robots.ts`, `sitemap.ts`, generated tab icon (`icon.tsx`, `apple-icon.tsx`; replace with final logo when ready), share-preview images (`opengraph-image.tsx` site-wide and `p/[username]/opengraph-image.tsx` for profiles), Organization JSON-LD on Home, FAQ JSON-LD on /faq, custom `not-found.tsx` / `error.tsx`, security headers in `next.config.ts` (no CSP yet).
+- Speed lessons (Lighthouse mobile): CSS container-query units were very expensive when animated. `CardMockup` has a fixed-`width` mode (no container units) for small/animated uses; only the designer's live preview and admin use the responsive mode. `TapDemo` animates only while on screen and only `translate/rotate/opacity/scale`. Public header must not import the Supabase client (login state is read from the `sb-…-auth-token` cookie). Marketing links on profiles use `prefetch={false}`.
+- Always run `npm run build` before launch tasks: dev mode hides production-only problems. Lighthouse and the SQL/server-action test scripts live in the session scratch folder, not the project.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.

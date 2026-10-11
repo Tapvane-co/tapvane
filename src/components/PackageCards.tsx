@@ -84,7 +84,7 @@ function buildCards(products: Product[], stock: StockRow[]): Card[] {
 }
 
 // The four package cards. Prices come from the database, so a price change in admin shows here.
-export default async function PackageCards() {
+export default async function PackageCards({ heading: Heading = "h3" }: { heading?: "h2" | "h3" }) {
   const [products, stock] = await Promise.all([getProducts(), getStock()]);
   if (!products) {
     return (
@@ -106,7 +106,7 @@ export default async function PackageCards() {
               Most Popular
             </span>
           )}
-          <h3 className="font-display text-2xl text-ivory">{c.name}</h3>
+          <Heading className="font-display text-2xl text-ivory">{c.name}</Heading>
           <p className="mt-1 font-display text-3xl text-gold">{c.price}</p>
           {c.status !== "ok" && (
             <p className={`mt-2 text-sm font-semibold ${c.status === "out" ? "text-red-300" : "text-gold"}`}>

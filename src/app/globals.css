@@ -20,3 +20,26 @@ body {
   color: var(--color-ivory);
   font-family: var(--font-manrope), system-ui, sans-serif;
 }
+
+/* A clear gold ring when someone moves around with the keyboard. (Text boxes show a gold border instead.) */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+/* People who ask their phone for less motion get none. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -75,7 +75,7 @@ export default function ProfileView({ profile, preview = false }: { profile: Pro
             Save Contact
           </a>
           <p className="mt-6 text-center text-xs text-stone">
-            <Link href="/" className="underline-offset-4 hover:underline">
+            <Link href="/" prefetch={false} className="underline-offset-4 hover:underline">
               Get your own Tapvane card
             </Link>
           </p>

@@ -60,7 +60,7 @@ async function QuoteNote() {
   return (
     <p className="mt-4 text-sm text-muted">
       Need more than 10 cards for your company or event?{" "}
-      <a href={whatsappLink(whatsappNumber)} target="_blank" rel="noopener noreferrer" className="text-gold underline-offset-4 hover:underline">
+      <a href={whatsappLink(whatsappNumber)} target="_blank" rel="noopener noreferrer" className="text-gold underline underline-offset-4">
         Chat with us on WhatsApp
       </a>{" "}
       for a custom quote.
@@ -78,7 +78,7 @@ export default function PackagesPage() {
 
       <div className="mt-12">
         <Suspense fallback={<div className="h-72 rounded-2xl border border-line-subtle" />}>
-          <PackageCards />
+          <PackageCards heading="h2" />
         </Suspense>
       </div>
 

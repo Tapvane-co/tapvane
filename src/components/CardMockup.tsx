@@ -1,10 +1,15 @@
+import type { CSSProperties } from "react";
 import type { CardColours, CardLayout, Finish } from "@/lib/shop";
 import { initials } from "@/lib/profiles";
 
 // The Tapvane card, drawn in code (PRD section 8). Used on the website and in the card designer.
-// Sizes scale with the card's own width, so it looks right at any size.
+//
+// Two ways to size it:
+//  * no `width`: it fills its container and everything scales with it (uses CSS container units);
+//  * `width` in pixels: a fixed size that is much cheaper for the browser, used for small thumbnails
+//    and for the animated demo on the Home page.
 
-export function NfcWaveIcon({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
+export function NfcWaveIcon({ className = "", style }: { className?: string; style?: CSSProperties }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className={className} style={style} aria-hidden="true">
       <path d="M8 8.5a5 5 0 0 1 0 7" />
@@ -25,7 +30,7 @@ export const noirGold: CardColours = {
   backText: "#0B0B0C",
 };
 
-const cardShape = "relative aspect-[1.586] w-full overflow-hidden rounded-[4.5%/7%]";
+const shape = "relative overflow-hidden";
 
 export default function CardMockup({
   side = "front",
@@ -35,6 +40,7 @@ export default function CardMockup({
   name = "Tapvane",
   title = "Tap. Share. Connect.",
   company = "",
+  width,
   className = "",
 }: {
   side?: "front" | "back";
@@ -44,28 +50,31 @@ export default function CardMockup({
   name?: string;
   title?: string;
   company?: string;
+  width?: number;
   className?: string;
 }) {
   const subtitle = [title, company].filter(Boolean).join(" · ");
   const glossy = finish === "standard";
   const shadow = glossy ? "shadow-2xl shadow-black/60" : "shadow-xl shadow-black/40";
 
+  // One "unit" is 1% of the card's width. n units -> "n cqw" (fills container) or "n em" (fixed width).
+  const u = (n: number) => (width ? `${n}em` : `${n}cqw`);
+  const box: CSSProperties = width
+    ? { width, height: width / 1.586, fontSize: width / 100, borderRadius: `${width * 0.045}px / ${(width / 1.586) * 0.07}px` }
+    : { width: "100%", aspectRatio: "1.586", containerType: "inline-size", borderRadius: "4.5% / 7%" };
+
   if (side === "back") {
     return (
       <div
-        className={`${cardShape} border ${shadow} ${className}`}
-        style={{ containerType: "inline-size", background: colours.backBg, color: colours.backText, borderColor: `${colours.backText}40` }}
+        className={`${shape} border ${shadow} ${className}`}
+        style={{ ...box, background: colours.backBg, color: colours.backText, borderColor: `${colours.backText}40` }}
         role="img"
         aria-label="Back of a Tapvane card"
       >
         {glossy && <div className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-black/15" />}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display uppercase tracking-[0.3em]" style={{ fontSize: "9cqw" }}>
-            Tapvane
-          </span>
-          <span className="mt-[2cqw] uppercase tracking-[0.25em]" style={{ fontSize: "3cqw" }}>
-            Tap to connect
-          </span>
+          <span className="font-display uppercase tracking-[0.3em]" style={{ fontSize: u(9) }}>Tapvane</span>
+          <span className="uppercase tracking-[0.25em]" style={{ fontSize: u(3), marginTop: u(2) }}>Tap to connect</span>
         </div>
       </div>
     );
@@ -73,16 +82,14 @@ export default function CardMockup({
 
   const shownName = name || "Your name";
   const wordmark = "font-display uppercase tracking-[0.3em]";
+  const sub = (
+    <p className="truncate opacity-70" style={{ fontSize: u(3.4), marginTop: u(1.2) }}>{subtitle}</p>
+  );
 
   return (
     <div
-      className={`${cardShape} border ${shadow} ${className}`}
-      style={{
-        containerType: "inline-size",
-        background: colours.frontBg,
-        color: colours.frontText,
-        borderColor: `${colours.accent}55`,
-      }}
+      className={`${shape} border ${shadow} ${className}`}
+      style={{ ...box, background: colours.frontBg, color: colours.frontText, borderColor: `${colours.accent}55` }}
       role="img"
       aria-label={`Tapvane card for ${shownName}`}
     >
@@ -92,45 +99,29 @@ export default function CardMockup({
 
       {layout === "centred" ? (
         <>
-          <span className={`absolute left-0 right-0 top-[6cqw] text-center ${wordmark}`} style={{ fontSize: "4.5cqw", color: colours.accent }}>
-            Tapvane
-          </span>
-          <div className="absolute inset-x-[6cqw] top-1/2 -translate-y-1/2 text-center">
-            <p className="truncate font-display" style={{ fontSize: "7.5cqw" }}>
-              {shownName}
-            </p>
-            {subtitle && (
-              <p className="mt-[1.5cqw] truncate opacity-70" style={{ fontSize: "3.4cqw" }}>
-                {subtitle}
-              </p>
-            )}
+          <span className={`absolute left-0 right-0 text-center ${wordmark}`} style={{ top: u(6), fontSize: u(4.5), color: colours.accent }}>Tapvane</span>
+          <div className="absolute top-1/2 -translate-y-1/2 text-center" style={{ left: u(6), right: u(6) }}>
+            <p className="truncate font-display" style={{ fontSize: u(7.5) }}>{shownName}</p>
+            {subtitle && sub}
           </div>
-          <NfcWaveIcon className="absolute bottom-[5cqw] left-1/2 -translate-x-1/2" style={{ width: "6cqw", height: "6cqw", color: colours.accent }} />
+          <NfcWaveIcon className="absolute left-1/2 -translate-x-1/2" style={{ bottom: u(5), width: u(6), height: u(6), color: colours.accent }} />
         </>
       ) : (
         <>
           {layout === "monogram" && (
             <span
-              className="absolute -right-[2cqw] -top-[6cqw] font-display leading-none"
-              style={{ fontSize: "62cqw", color: colours.accent, opacity: 0.14 }}
+              className="absolute font-display leading-none"
+              style={{ right: u(-2), top: u(-6), fontSize: u(62), color: colours.accent, opacity: 0.14 }}
               aria-hidden="true"
             >
               {name ? initials(name).slice(0, 1) : "T"}
             </span>
           )}
-          <span className={`absolute left-[6cqw] top-[6cqw] ${wordmark}`} style={{ fontSize: "5cqw", color: colours.accent }}>
-            Tapvane
-          </span>
-          <NfcWaveIcon className="absolute right-[6cqw] top-[5cqw]" style={{ width: "7cqw", height: "7cqw", color: colours.accent }} />
-          <div className="absolute bottom-[6cqw] left-[6cqw] right-[6cqw]">
-            <p className="truncate font-display" style={{ fontSize: "6.5cqw" }}>
-              {shownName}
-            </p>
-            {subtitle && (
-              <p className="mt-[1cqw] truncate opacity-70" style={{ fontSize: "3.4cqw" }}>
-                {subtitle}
-              </p>
-            )}
+          <span className={`absolute ${wordmark}`} style={{ left: u(6), top: u(6), fontSize: u(5), color: colours.accent }}>Tapvane</span>
+          <NfcWaveIcon className="absolute" style={{ right: u(6), top: u(5), width: u(7), height: u(7), color: colours.accent }} />
+          <div className="absolute" style={{ left: u(6), right: u(6), bottom: u(6) }}>
+            <p className="truncate font-display" style={{ fontSize: u(6.5) }}>{shownName}</p>
+            {subtitle && sub}
           </div>
         </>
       )}

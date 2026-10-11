@@ -136,8 +136,8 @@ export function SignupForm({ next }: { next?: string }) {
           <input name="consent" type="checkbox" required className="mt-1 h-4 w-4 accent-[#C9A34E]" />
           <span>
             I agree to the{" "}
-            <Link href="/terms" className="text-gold underline-offset-4 hover:underline">Terms of Service</Link> and{" "}
-            <Link href="/privacy" className="text-gold underline-offset-4 hover:underline">Privacy Policy</Link>.
+            <Link href="/terms" className="text-gold underline underline-offset-4">Terms of Service</Link> and{" "}
+            <Link href="/privacy" className="text-gold underline underline-offset-4">Privacy Policy</Link>.
           </span>
         </label>
         {error && <Message kind="error">{error}</Message>}
@@ -147,7 +147,7 @@ export function SignupForm({ next }: { next?: string }) {
       </form>
       <p className="text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link href={`/login${withNext}`} className="text-gold underline-offset-4 hover:underline">Log in</Link>
+        <Link href={`/login${withNext}`} className="text-gold underline underline-offset-4">Log in</Link>
       </p>
     </Shell>
   );
@@ -196,7 +196,7 @@ export function LoginForm({ next }: { next?: string }) {
         <Link href="/forgot-password" className="text-gold underline-offset-4 hover:underline">Forgot your password?</Link>
         <span>
           New here?{" "}
-          <Link href={`/signup${withNext}`} className="text-gold underline-offset-4 hover:underline">Create account</Link>
+          <Link href={`/signup${withNext}`} className="text-gold underline underline-offset-4">Create account</Link>
         </span>
       </div>
     </Shell>

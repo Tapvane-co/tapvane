@@ -16,6 +16,7 @@ export type Settings = {
   pickupAddress: string;
   deliveryFeeMakurdi: number;
   deliveryFeeNationwide: number;
+  legalName: string; // registered business name + RC/BN number, for Terms and Privacy; empty until set
 };
 
 // The starting values from the PRD. Used only if a setting is missing from the database.
@@ -27,6 +28,7 @@ const defaultSettings: Settings = {
   pickupAddress: "Opp. Holy Ghost Catholic Church, Wadata, Makurdi, Benue State",
   deliveryFeeMakurdi: 1500,
   deliveryFeeNationwide: 5000,
+  legalName: "",
 };
 
 // Prices are never hard-coded for real visitors. These stand-ins exist ONLY on the developer's
@@ -84,6 +86,7 @@ export async function getSettings(): Promise<Settings> {
     pickupAddress: text("pickup_address", defaultSettings.pickupAddress),
     deliveryFeeMakurdi: fee("delivery_fee_makurdi", defaultSettings.deliveryFeeMakurdi),
     deliveryFeeNationwide: fee("delivery_fee_nationwide", defaultSettings.deliveryFeeNationwide),
+    legalName: v.get("legal_business_name")?.trim() ?? "",
   };
 }
 

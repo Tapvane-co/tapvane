@@ -31,6 +31,7 @@ export function OrderThumb({ line }: { line: OrderLine }) {
   return (
     <div className="w-24 shrink-0">
       <CardMockup
+        width={96}
         layout={d.template.layout}
         finish={d.finish}
         colours={{
