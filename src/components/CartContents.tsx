@@ -7,7 +7,7 @@ import { readCartRaw, removeFromCart, setQuantity, subscribeCart } from "@/lib/c
 import { loadShopData } from "@/lib/shop-actions";
 import { formatNaira, parseCart, unitsUsed, type CartItem, type ShopData } from "@/lib/shop";
 
-function Thumb({ item, data }: { item: CartItem; data: ShopData }) {
+export function Thumb({ item, data }: { item: CartItem; data: ShopData }) {
   const d = item.design;
   if (!d) {
     return (

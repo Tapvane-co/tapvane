@@ -72,8 +72,15 @@ function friendly(message: string) {
   return message;
 }
 
-export function SignupForm() {
+// Where to go after logging in: only addresses on this site are allowed (never another website).
+export function safeNext(next?: string) {
+  return next && /^\/(?![/\\])/.test(next) ? next : "/dashboard";
+}
+
+export function SignupForm({ next }: { next?: string }) {
   const router = useRouter();
+  const after = safeNext(next);
+  const withNext = next ? `?next=${encodeURIComponent(after)}` : "";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [checkEmail, setCheckEmail] = useState(false);
@@ -88,12 +95,12 @@ export function SignupForm() {
       password: String(f.get("password")),
       options: {
         data: { full_name: String(f.get("name")).trim() },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}${after}`,
       },
     });
     setBusy(false);
     if (error) return setError(friendly(error.message));
-    if (data.session) router.push("/dashboard");
+    if (data.session) router.push(after);
     else setCheckEmail(true);
   }
 
@@ -103,7 +110,7 @@ export function SignupForm() {
         <Message kind="ok">
           We sent you a link. Open it to confirm your email, then log in to set up your profile.
         </Message>
-        <Link href="/login" className="text-center text-sm text-gold underline-offset-4 hover:underline">
+        <Link href={`/login${withNext}`} className="text-center text-sm text-gold underline-offset-4 hover:underline">
           Go to log in
         </Link>
       </Shell>
@@ -140,14 +147,16 @@ export function SignupForm() {
       </form>
       <p className="text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link href="/login" className="text-gold underline-offset-4 hover:underline">Log in</Link>
+        <Link href={`/login${withNext}`} className="text-gold underline-offset-4 hover:underline">Log in</Link>
       </p>
     </Shell>
   );
 }
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const router = useRouter();
+  const after = safeNext(next);
+  const withNext = next ? `?next=${encodeURIComponent(after)}` : "";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -164,7 +173,7 @@ export function LoginForm() {
       setBusy(false);
       return setError(friendly(error.message));
     }
-    router.push("/dashboard");
+    router.push(after);
   }
 
   return (
@@ -187,7 +196,7 @@ export function LoginForm() {
         <Link href="/forgot-password" className="text-gold underline-offset-4 hover:underline">Forgot your password?</Link>
         <span>
           New here?{" "}
-          <Link href="/signup" className="text-gold underline-offset-4 hover:underline">Create account</Link>
+          <Link href={`/signup${withNext}`} className="text-gold underline-offset-4 hover:underline">Create account</Link>
         </span>
       </div>
     </Shell>

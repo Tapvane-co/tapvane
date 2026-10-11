@@ -57,6 +57,10 @@ export function removeFromCart(id: string) {
   writeCart(readCart().filter((i) => i.id !== id));
 }
 
+export function clearCart() {
+  writeCart([]);
+}
+
 export function openCart() {
   window.dispatchEvent(new Event(OPEN));
 }

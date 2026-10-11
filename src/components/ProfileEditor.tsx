@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import DashboardHeader from "@/components/DashboardHeader";
 import ProfileView from "@/components/ProfileView";
 import { inputClass, primaryButton } from "@/components/AuthForms";
 import {
@@ -123,7 +124,7 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
   const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   // Admin photos go in their own folder (allowed by the admin rule in the database).
-  const adminFolder = useRef(`admin-uploads/${crypto.randomUUID()}`);
+  const adminFolder = useRef<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -185,6 +186,7 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
     setError("");
     try {
       const blob = await resizePhoto(file);
+      if (isAdminMode && !adminFolder.current) adminFolder.current = `admin-uploads/${crypto.randomUUID()}`;
       const path = `${isAdminMode ? adminFolder.current : userId}/avatar.jpg`;
       const { error } = await supabase.storage
         .from("profile-photos")
@@ -249,11 +251,6 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
     setSaved(true);
   }
 
-  async function signOut() {
-    await supabase.auth.signOut();
-    router.push("/");
-  }
-
   if (loading) {
     return <main className="flex flex-1 items-center justify-center text-muted">Loading…</main>;
   }
@@ -263,14 +260,7 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
 
   return (
     <main className={`mx-auto w-full max-w-5xl flex-1 ${isAdminMode ? "" : "px-6 py-10"}`}>
-      {!isAdminMode && (
-        <header className="flex items-center justify-between gap-4">
-          <Link href="/" className="font-display text-gold uppercase tracking-[0.3em] text-lg">Tapvane</Link>
-          <button onClick={signOut} className="min-h-11 rounded-full border border-line px-5 text-sm text-ivory hover:border-gold">
-            Log out
-          </button>
-        </header>
-      )}
+      {!isAdminMode && <DashboardHeader active="profile" />}
 
       <h1 className={`font-display text-3xl text-ivory ${isAdminMode ? "" : "mt-8"}`}>
         {isAdminMode

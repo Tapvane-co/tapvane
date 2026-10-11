@@ -58,6 +58,12 @@ export function formatNaira(amount: number) {
   return "₦" + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// Turns "+234 902 591 8252" into a WhatsApp link, with an optional ready-typed message.
+export function whatsappLink(number: string, message?: string) {
+  const digits = number.replace(/\D/g, "");
+  return `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
+}
+
 // Only the Pro package unlocks the matte finish and premium designs.
 export const isPro = (p: Pick<Product, "type">) => p.type === "pro";
 

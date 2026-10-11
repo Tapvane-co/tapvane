@@ -96,11 +96,7 @@ export async function getCurrentYear(): Promise<number> {
 
 export { formatNaira } from "@/lib/shop";
 
-// Turns "+234 902 591 8252" into a WhatsApp link, with an optional ready-typed message.
-export function whatsappLink(number: string, message?: string) {
-  const digits = number.replace(/\D/g, "");
-  return `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
-}
+export { whatsappLink } from "@/lib/shop";
 
 export function instagramUrl(handle: string) {
   return /^https?:\/\//i.test(handle) ? handle : `https://instagram.com/${handle.replace(/^@/, "")}`;

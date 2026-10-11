@@ -10,7 +10,9 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <SiteHeader />
+      <Suspense fallback={<div className="h-16 border-b border-line-subtle" />}>
+        <SiteHeader />
+      </Suspense>
       <div className="flex flex-1 flex-col">{children}</div>
       <Suspense fallback={null}>
         <SiteFooter />

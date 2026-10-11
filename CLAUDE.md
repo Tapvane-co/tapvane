@@ -45,6 +45,15 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Cart lives in browser storage (`src/lib/cart.ts`) and stores only choices (package slug, template/colour/finish slugs, card text) — never prices. Checkout (Stage 8) must re-read prices and stock from the database on the server and save a full snapshot of each design with the order. Card text limits: name 26, title 24, company 24.
 - Cart icon opens a side panel (`CartDrawer`); `/cart` shows the same `CartContents`. `/checkout` is a temporary placeholder until Stage 8.
 
+## Checkout & orders (Stage 8)
+- SQL: `supabase/stage8-checkout.sql` adds `orders`, private `payment-proofs` storage, and these database functions: `create_order` (the ONLY way an order is made: it prices everything from the database, checks Pro-only rules and stock, snapshots the full design), `refresh_payment_reference`, `submit_transfer_proof`, `mark_order_paid` + `apply_stock_for_order` (callable ONLY by `service_role`). Customers can read their own orders but cannot insert/update them. Stock is taken when an order becomes Paid (once per order).
+- Tested on an in-memory Postgres (PGlite) with 50 checks; re-run those if the SQL changes. Test scripts were kept outside the project.
+- Server code: `src/lib/checkout-actions.ts` (server actions), `order-payments.ts` (settle payment + email once), `paystack.ts` (initialize/verify/webhook signature, kobo amounts), `email.ts` (Resend; no key = no email, nothing breaks), `supabase/server.ts` (acts as the signed-in customer), `supabase/admin.ts` (service key, server only, used only to mark orders paid).
+- Paystack uses hosted payment page redirect (server-initialised, amount from the order), then verifies on return AND via webhook `/api/paystack/webhook` (signature checked). Needs `PAYSTACK_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY`; otherwise the Paystack option shows "coming soon". Bank transfer needs `bank_name`, `bank_account_name`, `bank_account_number` filled in `settings` (admin Settings in Stage 9); only signed-in customers can read them.
+- Order numbers start at 1001 and show as `#1001`. Statuses and labels: `src/lib/orders.ts`. Status-change emails (`statusUpdateEmail`, `paymentReceivedEmail`) are written but get used by admin in Stage 9.
+- Customer pages: `/checkout`, `/checkout/confirmation/[n]`, `/dashboard/orders`, `/dashboard/orders/[n]`. Login/signup accept `?next=/path` (same-site paths only).
+- Known test-window quirk: when the browser pane is hidden, streamed pages can look stuck on "Loading…". It is not a site bug; bring the tab to the front.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.
