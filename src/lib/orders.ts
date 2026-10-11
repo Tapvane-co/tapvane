@@ -69,6 +69,35 @@ export type Order = {
 
 export const orderRef = (n: number) => `#${n}`;
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export function rowToOrder(r: any): Order {
+  return {
+    id: r.id,
+    orderNumber: Number(r.order_number),
+    status: r.status as OrderStatus,
+    paymentMethod: r.payment_method as PaymentMethod,
+    items: (r.items ?? []) as OrderLine[],
+    subtotal: r.subtotal,
+    deliveryOption: r.delivery_option as DeliveryOption,
+    deliveryFee: r.delivery_fee,
+    total: r.total,
+    phone: r.phone,
+    address: r.address,
+    city: r.city,
+    state: r.state,
+    proofUploaded: Boolean(r.proof_url),
+    createdAt: r.created_at,
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+// A phone number as people type it (0803...) turned into a WhatsApp link.
+export function phoneToWhatsapp(phone: string) {
+  const digits = phone.replace(/\D/g, "");
+  const full = digits.startsWith("0") ? "234" + digits.slice(1) : digits;
+  return `https://wa.me/${full}`;
+}
+
 // Nigeria's 36 states and the FCT, for the delivery address.
 export const nigerianStates = [
   "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", "Cross River", "Delta",

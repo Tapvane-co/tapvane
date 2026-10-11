@@ -1,8 +1,8 @@
 "use server";
 
 import { orderConfirmationEmail, sendEmail } from "@/lib/email";
-import { rowToOrder, settlePaystackPayment } from "@/lib/order-payments";
-import type { DeliveryOption, Order, OrderStatus, PaymentMethod } from "@/lib/orders";
+import { settlePaystackPayment } from "@/lib/order-payments";
+import { rowToOrder, type DeliveryOption, type Order, type OrderStatus, type PaymentMethod } from "@/lib/orders";
 import { initializeTransaction, paystackEnabled, verifyTransaction } from "@/lib/paystack";
 import type { CartItem, ShopData } from "@/lib/shop";
 import { getShopData } from "@/lib/shop-data";

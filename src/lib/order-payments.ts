@@ -1,30 +1,9 @@
 import { orderConfirmationEmail, sendEmail } from "@/lib/email";
-import type { DeliveryOption, Order, OrderLine, OrderStatus, PaymentMethod } from "@/lib/orders";
+import { rowToOrder } from "@/lib/orders";
 import { getSettings } from "@/lib/site";
 import { createServiceClient } from "@/lib/supabase/admin";
 
-// Server-only helpers for orders. Not callable from the browser.
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export function rowToOrder(r: any): Order {
-  return {
-    id: r.id,
-    orderNumber: Number(r.order_number),
-    status: r.status as OrderStatus,
-    paymentMethod: r.payment_method as PaymentMethod,
-    items: (r.items ?? []) as OrderLine[],
-    subtotal: r.subtotal,
-    deliveryOption: r.delivery_option as DeliveryOption,
-    deliveryFee: r.delivery_fee,
-    total: r.total,
-    phone: r.phone,
-    address: r.address,
-    city: r.city,
-    state: r.state,
-    proofUploaded: Boolean(r.proof_url),
-    createdAt: r.created_at,
-  };
-}
+// Server-only helper for payments. Not callable from the browser.
 
 // Marks an order paid once Paystack has confirmed the money. Safe to call twice (webhook + return page):
 // the database only changes the order, takes stock, and lets us send the email the FIRST time.

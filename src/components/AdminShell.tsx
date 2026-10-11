@@ -7,8 +7,12 @@ import { createClient } from "@/lib/supabase/client";
 
 const nav = [
   { href: "/admin", label: "Overview" },
+  { href: "/admin/orders", label: "Orders" },
   { href: "/admin/profiles", label: "Profiles" },
   { href: "/admin/cards", label: "Cards" },
+  { href: "/admin/products", label: "Products" },
+  { href: "/admin/templates", label: "Templates" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 // Wraps every /admin page. The real protection is in the database (only admins can read or change
@@ -55,7 +59,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+      <header className="flex flex-wrap items-center justify-between gap-4 print:hidden">
         <Link href="/admin" className="font-display text-gold uppercase tracking-[0.3em] text-lg">
           Tapvane <span className="ml-2 text-xs tracking-widest text-stone">Admin</span>
         </Link>
@@ -63,7 +67,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           Log out
         </button>
       </header>
-      <nav className="mt-6 flex gap-2 border-b border-line-subtle pb-4">
+      <nav className="mt-6 flex flex-wrap gap-2 border-b border-line-subtle pb-4 print:hidden">
         {nav.map((n) => {
           const active = n.href === "/admin" ? pathname === "/admin" : pathname.startsWith(n.href);
           return (

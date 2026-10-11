@@ -54,6 +54,13 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Customer pages: `/checkout`, `/checkout/confirmation/[n]`, `/dashboard/orders`, `/dashboard/orders/[n]`. Login/signup accept `?next=/path` (same-site paths only).
 - Known test-window quirk: when the browser pane is hidden, streamed pages can look stuck on "Loading…". It is not a site bug; bring the tab to the front.
 
+## Admin shop management (Stage 9)
+- SQL: `supabase/stage9-admin-orders.sql` adds `admin_set_order_status` (admin-only; records paid time, takes stock once when an order first counts as paid, restores it on cancel) and `restore_stock_for_order`. Run after stage 8. Tested on PGlite (23 checks).
+- Admin pages: `/admin` (today's orders, transfers to confirm, paid-to-make, revenue, low stock), `/admin/orders` + `/[number]` (next-step buttons, manual status, proof of payment via signed URL, WhatsApp/call) + `/[number]/print` (production sheet at real card size, exact hex codes), `/admin/products` (prices, cards included, shown/hidden, stock counts; blank stock = not counting), `/admin/templates` (templates + colour sets with live previews), `/admin/settings` (contact, pickup, delivery fees, bank details).
+- All writes go through `src/lib/admin-actions.ts` (server actions): each checks `is_admin` first, validates input, writes with the admin's own session (RLS), then calls `updateTag("products" | "shop" | "settings")` so the public site refreshes immediately. Status changes email the customer (payment received / status update). Server-action files may export only async functions.
+- Admin action tests (43 checks, fake database) and PGlite SQL tests live outside the project in the session scratch folder; re-create them if admin-actions.ts or the SQL changes.
+- `/admin/customers` from the PRD is not built; customers appear via Orders and Profiles.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.

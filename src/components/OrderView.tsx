@@ -18,7 +18,7 @@ type Contact = Awaited<ReturnType<typeof getOrderContact>>;
 
 const goldButton = "flex min-h-12 items-center justify-center rounded-full bg-gold px-8 font-semibold text-onyx hover:brightness-110 disabled:opacity-50";
 
-function Thumb({ line }: { line: OrderLine }) {
+export function OrderThumb({ line }: { line: OrderLine }) {
   const d = line.design;
   if (!d) {
     return (
@@ -226,7 +226,7 @@ export default function OrderView({ number, thankYou = false, reference }: { num
         <ul className="mt-4 divide-y divide-line-subtle">
           {o.items.map((line, i) => (
             <li key={i} className="flex items-center gap-4 py-4">
-              <Thumb line={line} />
+              <OrderThumb line={line} />
               <div className="min-w-0 flex-1">
                 <p className="text-ivory">
                   {line.name}
