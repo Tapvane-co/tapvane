@@ -105,25 +105,51 @@ function Field({
   );
 }
 
-export default function ProfileEditor() {
+// Customers use this with no props (their own profile). Admin passes adminProfileId:
+// a profile's id to edit it, or "new" to create a profile for a walk-in customer.
+export default function ProfileEditor({ adminProfileId }: { adminProfileId?: string }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
+  const isAdminMode = adminProfileId !== undefined;
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState(true);
   const [form, setForm] = useState<Form>(empty);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  // Admin photos go in their own folder (allowed by the admin rule in the database).
+  const adminFolder = useRef(`admin-uploads/${crypto.randomUUID()}`);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return router.replace("/login");
+
+      if (isAdminMode) {
+        if (adminProfileId === "new") {
+          if (cancelled) return;
+          setUserId(auth.user.id);
+          setLoading(false);
+          return;
+        }
+        const { data: row } = await supabase.from("profiles").select("*").eq("id", adminProfileId).maybeSingle();
+        if (cancelled) return;
+        if (!row) return router.replace("/admin/profiles");
+        setUserId(auth.user.id);
+        setProfileId(row.id);
+        setIsActive(row.is_active);
+        setForm(rowToForm(row));
+        setFirstName(row.full_name.split(" ")[0] ?? "");
+        setLoading(false);
+        return;
+      }
+
       const meta = (auth.user.user_metadata?.full_name as string | undefined) ?? "";
       const { data: rows } = await supabase
         .from("profiles")
@@ -145,7 +171,7 @@ export default function ProfileEditor() {
     return () => {
       cancelled = true;
     };
-  }, [supabase, router]);
+  }, [supabase, router, isAdminMode, adminProfileId]);
 
   function set(name: keyof Form, value: string) {
     setSaved(false);
@@ -159,7 +185,7 @@ export default function ProfileEditor() {
     setError("");
     try {
       const blob = await resizePhoto(file);
-      const path = `${userId}/avatar.jpg`;
+      const path = `${isAdminMode ? adminFolder.current : userId}/avatar.jpg`;
       const { error } = await supabase.storage
         .from("profile-photos")
         .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
@@ -196,9 +222,17 @@ export default function ProfileEditor() {
     };
 
     setBusy(true);
-    const result = profileId
-      ? await supabase.from("profiles").update(row).eq("id", profileId).select("id").single()
-      : await supabase.from("profiles").insert({ ...row, owner_user_id: userId }).select("id").single();
+    let result;
+    if (isAdminMode) {
+      const adminRow = { ...row, is_active: isActive };
+      result = profileId
+        ? await supabase.from("profiles").update(adminRow).eq("id", profileId).select("id").single()
+        : await supabase.from("profiles").insert({ ...adminRow, owner_user_id: null }).select("id").single();
+    } else {
+      result = profileId
+        ? await supabase.from("profiles").update(row).eq("id", profileId).select("id").single()
+        : await supabase.from("profiles").insert({ ...row, owner_user_id: userId }).select("id").single();
+    }
     setBusy(false);
 
     if (result.error) {
@@ -208,6 +242,7 @@ export default function ProfileEditor() {
           : "We could not save your profile. Please try again.",
       );
     }
+    if (isAdminMode && !profileId) return router.replace(`/admin/profiles/${result.data.id}`);
     setProfileId(result.data.id);
     setFirstName(form.fullName.trim().split(" ")[0]);
     setSaved(true);
@@ -226,18 +261,22 @@ export default function ProfileEditor() {
   const previewProfile = toProfile(form);
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
-      <header className="flex items-center justify-between gap-4">
-        <Link href="/" className="font-display text-gold uppercase tracking-[0.3em] text-lg">Tapvane</Link>
-        <button onClick={signOut} className="min-h-11 rounded-full border border-line px-5 text-sm text-ivory hover:border-gold">
-          Log out
-        </button>
-      </header>
+    <main className={`mx-auto w-full max-w-5xl flex-1 ${isAdminMode ? "" : "px-6 py-10"}`}>
+      {!isAdminMode && (
+        <header className="flex items-center justify-between gap-4">
+          <Link href="/" className="font-display text-gold uppercase tracking-[0.3em] text-lg">Tapvane</Link>
+          <button onClick={signOut} className="min-h-11 rounded-full border border-line px-5 text-sm text-ivory hover:border-gold">
+            Log out
+          </button>
+        </header>
+      )}
 
-      <h1 className="mt-8 font-display text-3xl text-ivory">
-        Welcome back{firstName ? `, ${firstName}` : ""}
+      <h1 className={`font-display text-3xl text-ivory ${isAdminMode ? "" : "mt-8"}`}>
+        {isAdminMode
+          ? profileId ? `Edit profile: ${firstName}` : "New profile"
+          : `Welcome back${firstName ? `, ${firstName}` : ""}`}
       </h1>
-      {incomplete && (
+      {incomplete && !isAdminMode && (
         <p className="mt-2 max-w-xl text-muted">
           Your profile isn&apos;t complete yet. Add your details so people see the right info when they tap your card.
         </p>
@@ -298,10 +337,22 @@ export default function ProfileEditor() {
           <Field label="Facebook" name="facebook" value={form.facebook} onChange={set} placeholder="Page name or link" />
           <Field label="Snapchat" name="snapchat" value={form.snapchat} onChange={set} placeholder="Your username" />
 
+          {isAdminMode && (
+            <label className="flex min-h-11 items-center gap-3 text-sm text-ivory">
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) => { setSaved(false); setIsActive(e.target.checked); }}
+                className="h-4 w-4 accent-[#C9A34E]"
+              />
+              Profile is switched on (untick to show &ldquo;Profile unavailable&rdquo;)
+            </label>
+          )}
+
           {error && <p role="alert" className="rounded-xl border border-red-900 px-4 py-3 text-sm text-red-300">{error}</p>}
           {saved && (
             <p role="status" className="rounded-xl border border-gold px-4 py-3 text-sm text-ivory">
-              Your profile is updated. Your card already shows the new details.{" "}
+              {isAdminMode ? "Profile saved." : "Your profile is updated. Your card already shows the new details."}{" "}
               <Link href={`/p/${form.username}`} className="text-gold underline">View my profile</Link>
             </p>
           )}

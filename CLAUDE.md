@@ -26,6 +26,12 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Paystack payments are verified server-side via webhook only.
 - Secrets live only in `.env.local` (never committed). Supabase row-level security on all tables; admin routes restricted to admin accounts.
 
+## Database & admin (Stage 5)
+- SQL lives in `supabase/` and is run by the founder in Supabase SQL Editor: `schema.sql` (profiles, photos), then `stage5-admin.sql` (admins, cards, admin rules, `lookup_card`).
+- Admin = a row in `public.admins`, checked by `public.is_admin()` inside row-level-security rules. No service-role key needed; never add one to client code. Founder adds themselves by SQL only.
+- `/c/[code]` reads cards only through the `lookup_card(code)` function, so visitors can never list cards. Admin-made walk-in profiles have `owner_user_id` null.
+- Test cards `TVN-DEMO1` / `TVN-NEW01` / `TVN-OFF01` and profile `demo` are built-in samples in `src/lib/`.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.
