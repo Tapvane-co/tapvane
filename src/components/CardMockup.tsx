@@ -13,9 +13,9 @@ export function NfcWaveIcon({ className = "", style }: { className?: string; sty
 
 export default function CardMockup({
   side = "front",
-  name = "Amaka Obi",
-  title = "Brand Designer",
-  company = "Obi Studio",
+  name = "Tapvane",
+  title = "Tap. Share. Connect.",
+  company = "",
   className = "",
 }: {
   side?: "front" | "back";

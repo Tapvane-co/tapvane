@@ -27,18 +27,10 @@ export type Profile = {
 const sampleProfiles: Profile[] = [
   {
     username: "demo",
-    fullName: "Amaka Obi",
-    title: "Brand Designer",
-    company: "Obi Studio",
-    bio: "I design brands and websites for growing Nigerian businesses. Tap Save Contact to stay in touch.",
-    phone: "+2348000000000",
-    whatsapp: "2348000000000",
-    email: "hello@example.com",
-    website: "https://example.com",
-    location: "Wadata, Makurdi, Benue State",
-    instagram: "tapvane",
-    linkedin: "https://www.linkedin.com/in/example",
-    x: "tapvane",
+    fullName: "Tapvane",
+    title: "Tap. Share. Connect.",
+    bio: "The smart business card for Nigerian professionals and businesses.",
+    website: "https://tapvane.com",
     isActive: true,
   },
   {
@@ -48,11 +40,10 @@ const sampleProfiles: Profile[] = [
   },
 ];
 
-// Reads a profile for the public page: sample profiles first, then the database.
+// Reads a profile for the public page: the database first, then the built-in sample profiles.
+// So a real profile saved with the username "demo" in admin replaces the built-in sample.
 export async function getProfile(username: string): Promise<Profile | null> {
   const name = username.toLowerCase();
-  const sample = sampleProfiles.find((p) => p.username === name);
-  if (sample) return sample;
   if (!/^[a-z0-9-]{3,30}$/.test(name)) return null;
 
   const { data, error } = await createPublicClient()
@@ -60,8 +51,9 @@ export async function getProfile(username: string): Promise<Profile | null> {
     .select("*")
     .eq("username", name)
     .maybeSingle();
-  if (error || !data) return null;
-  return fromRow(data);
+  if (!error && data) return fromRow(data);
+
+  return sampleProfiles.find((p) => p.username === name) ?? null;
 }
 
 export function sampleUsernames() {

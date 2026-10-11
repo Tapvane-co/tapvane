@@ -61,10 +61,10 @@ export default function TapDemo({ className = "" }: { className?: string }) {
             <div className="h-[84px] shrink-0 border-b border-gold bg-charcoal" />
             <div className="flex flex-1 flex-col px-4 pb-4">
               <div className="-mt-7 flex h-14 w-14 items-center justify-center rounded-full border-[3px] border-onyx bg-charcoal outline outline-1 outline-gold">
-                <span className="font-display text-lg text-gold">AO</span>
+                <span className="font-display text-lg text-gold">TV</span>
               </div>
-              <p className="mt-2 font-display text-lg leading-tight text-ivory">Amaka Obi</p>
-              <p className="text-[10px] text-muted">Brand Designer · Obi Studio</p>
+              <p className="mt-2 font-display text-lg leading-tight text-ivory">Tapvane</p>
+              <p className="text-[10px] text-muted">Tap. Share. Connect.</p>
               <div className="mt-4 grid grid-cols-4 gap-1">
                 {[icons.call, icons.whatsapp, icons.email, icons.instagram].map((icon, i) => (
                   <span key={i} className="flex h-9 w-9 scale-90 items-center justify-center rounded-full border border-line text-gold">

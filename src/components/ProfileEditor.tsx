@@ -207,7 +207,8 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
     if (!/^[a-z0-9-]{3,30}$/.test(username)) {
       return setError("Username must be 3 to 30 characters: lowercase letters, numbers and hyphens.");
     }
-    if (reservedUsernames.has(username)) return setError("That username is not available. Please choose another.");
+    // Admin may use reserved names like "demo" (customers may not).
+    if (!isAdminMode && reservedUsernames.has(username)) return setError("That username is not available. Please choose another.");
     if (!form.fullName.trim()) return setError("Please enter your name.");
 
     const p = toProfile(form);
