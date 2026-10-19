@@ -69,7 +69,7 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Always run `npm run build` before launch tasks: dev mode hides production-only problems. Lighthouse and the SQL/server-action test scripts live in the session scratch folder, not the project.
 
 ## Email confirmation by code
-- Sign-up and "email not confirmed" log-ins use a 6-digit code (`VerifyCodeForm` in `AuthForms.tsx`: auto-checks at the 6th digit, 60-second resend wait, `verifyOtp` / `resend` with type `signup`). Needs the Supabase **Confirm signup** email template to contain `{{ .Token }}` (the link `{{ .ConfirmationURL }}` can stay too). Supabase's built-in email sender is limited to a few emails per hour for the whole project, so real delivery needs custom SMTP (Resend) once tapvane.com is verified. Password reset still uses a link.
+- Sign-up and "email not confirmed" log-ins use a 6-digit code (`VerifyCodeForm` in `AuthForms.tsx`: auto-checks at the 6th digit, 60-second resend wait, `verifyOtp` / `resend` with type `signup`). It is OFF unless `NEXT_PUBLIC_EMAIL_CODE=on` (until then people are told about the link). Turn it on only after the Supabase **Confirm signup** email template contains `{{ .Token }}` (Supabase only lets you edit templates once custom SMTP is set up) (the link `{{ .ConfirmationURL }}` can stay too). Supabase's built-in email sender is limited to a few emails per hour for the whole project, so real delivery needs custom SMTP (Resend) once tapvane.com is verified. Password reset still uses a link.
 
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.

@@ -79,6 +79,10 @@ export function safeNext(next?: string) {
 
 const RESEND_WAIT = 60; // seconds between "send a new code" presses (the email service allows about one a minute)
 
+// The code screen only makes sense once the "Confirm sign up" email contains the code ({{ .Token }}).
+// Until the founder switches this on (NEXT_PUBLIC_EMAIL_CODE=on), people are told about the link instead.
+const CODE_MODE = process.env.NEXT_PUBLIC_EMAIL_CODE === "on";
+
 // Confirming an email address with a 6-digit code instead of a link. The code is checked as soon as
 // the sixth digit is typed. Used after sign-up, and for anyone who tries to log in before confirming.
 export function VerifyCodeForm({
@@ -143,46 +147,60 @@ export function VerifyCodeForm({
       setWait(RESEND_WAIT);
       return setError(friendly(error.message));
     }
-    setNotice("We sent a new code. It can take a minute to arrive. Only the newest code works.");
+    setNotice(
+      CODE_MODE
+        ? "We sent a new code. It can take a minute to arrive. Only the newest code works."
+        : "We sent a new link. It can take a minute to arrive. Only the newest link works.",
+    );
     setWait(RESEND_WAIT);
   }
 
+  const thing = CODE_MODE ? "code" : "link";
+  const intro = CODE_MODE
+    ? alreadySent
+      ? `We sent a 6-digit code to ${email}. Type it below to confirm your email.`
+      : `${email} is not confirmed yet. Type the 6-digit code we emailed you, or ask for a new one.`
+    : alreadySent
+      ? `We sent a confirmation link to ${email}. Open it to confirm your email, then log in.`
+      : `${email} is not confirmed yet. Open the link we emailed you, or ask for a new one.`;
+
   return (
-    <Shell
-      title="Check your email"
-      intro={
-        alreadySent
-          ? `We sent a 6-digit code to ${email}. Type it below to confirm your email.`
-          : `${email} is not confirmed yet. Type the 6-digit code we emailed you, or ask for a new one.`
-      }
-    >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (code.length === 6 && !busy) verify(code);
-        }}
-        className="flex flex-col gap-4"
-      >
-        <label className="flex flex-col gap-2 text-sm text-muted">
-          6-digit code
-          <input
-            value={code}
-            onChange={(e) => onChange(e.target.value)}
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="[0-9]*"
-            maxLength={6}
-            autoFocus
-            placeholder="······"
-            className={`${inputClass} text-center font-mono text-2xl tracking-[0.5em]`}
-          />
-        </label>
-        {error && <Message kind="error">{error}</Message>}
-        {notice && <Message kind="ok">{notice}</Message>}
-        <button type="submit" disabled={busy || code.length !== 6} className={primaryButton}>
-          {busy ? "Checking…" : "Confirm"}
-        </button>
-      </form>
+    <Shell title="Check your email" intro={intro}>
+      {CODE_MODE && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (code.length === 6 && !busy) verify(code);
+          }}
+          className="flex flex-col gap-4"
+        >
+          <label className="flex flex-col gap-2 text-sm text-muted">
+            6-digit code
+            <input
+              value={code}
+              onChange={(e) => onChange(e.target.value)}
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]*"
+              maxLength={6}
+              autoFocus
+              placeholder="······"
+              className={`${inputClass} text-center font-mono text-2xl tracking-[0.5em]`}
+            />
+          </label>
+          {error && <Message kind="error">{error}</Message>}
+          {notice && <Message kind="ok">{notice}</Message>}
+          <button type="submit" disabled={busy || code.length !== 6} className={primaryButton}>
+            {busy ? "Checking…" : "Confirm"}
+          </button>
+        </form>
+      )}
+      {!CODE_MODE && (
+        <>
+          {error && <Message kind="error">{error}</Message>}
+          {notice && <Message kind="ok">{notice}</Message>}
+        </>
+      )}
       <div className="flex flex-col items-center gap-1 text-sm text-muted">
         <button
           type="button"
@@ -190,7 +208,7 @@ export function VerifyCodeForm({
           disabled={wait > 0 || busy}
           className="flex min-h-11 items-center text-gold underline underline-offset-4 disabled:text-stone disabled:no-underline"
         >
-          {wait > 0 ? `Send a new code in ${wait}s` : "Send me a new code"}
+          {wait > 0 ? `Send a new ${thing} in ${wait}s` : `Send me a new ${thing}`}
         </button>
         <button type="button" onClick={onChangeEmail} className="flex min-h-11 items-center text-muted underline underline-offset-4">
           Use a different email
