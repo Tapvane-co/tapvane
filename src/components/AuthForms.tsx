@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export const inputClass =
@@ -67,7 +67,7 @@ function PasswordInput({ autoComplete, minLength }: { autoComplete: string; minL
 function friendly(message: string) {
   if (/invalid login/i.test(message)) return "Email or password is not correct.";
   if (/already registered/i.test(message)) return "That email already has an account. Try logging in.";
-  if (/rate limit/i.test(message)) return "Too many attempts. Please wait a few minutes and try again.";
+  if (/rate limit|security purposes|too many/i.test(message)) return "Too many attempts. Please wait a minute and try again.";
   if (/password/i.test(message) && /characters/i.test(message)) return "Password must be at least 8 characters.";
   return message;
 }
@@ -77,21 +77,148 @@ export function safeNext(next?: string) {
   return next && /^\/(?![/\\])/.test(next) ? next : "/dashboard";
 }
 
+const RESEND_WAIT = 60; // seconds between "send a new code" presses (the email service allows about one a minute)
+
+// Confirming an email address with a 6-digit code instead of a link. The code is checked as soon as
+// the sixth digit is typed. Used after sign-up, and for anyone who tries to log in before confirming.
+export function VerifyCodeForm({
+  email,
+  after,
+  withNext,
+  alreadySent,
+  onChangeEmail,
+}: {
+  email: string;
+  after: string;
+  withNext: string;
+  alreadySent: boolean; // true right after sign-up (a code is on its way); false when someone arrives from log in
+  onChangeEmail: () => void;
+}) {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [wait, setWait] = useState(alreadySent ? RESEND_WAIT : 0);
+
+  useEffect(() => {
+    if (wait <= 0) return;
+    const id = setTimeout(() => setWait((w) => w - 1), 1000);
+    return () => clearTimeout(id);
+  }, [wait]);
+
+  async function verify(token: string) {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
+    if (error) {
+      setBusy(false);
+      setCode("");
+      return setError(
+        /expired|invalid|incorrect/i.test(error.message)
+          ? "That code is not right or has expired. Check the newest email, or ask for a new code."
+          : friendly(error.message),
+      );
+    }
+    router.push(after);
+  }
+
+  function onChange(value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 6);
+    setCode(digits);
+    if (digits.length === 6 && !busy) verify(digits);
+  }
+
+  async function resend() {
+    setError("");
+    setNotice("");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}${after}` },
+    });
+    if (error) {
+      setWait(RESEND_WAIT);
+      return setError(friendly(error.message));
+    }
+    setNotice("We sent a new code. It can take a minute to arrive. Only the newest code works.");
+    setWait(RESEND_WAIT);
+  }
+
+  return (
+    <Shell
+      title="Check your email"
+      intro={
+        alreadySent
+          ? `We sent a 6-digit code to ${email}. Type it below to confirm your email.`
+          : `${email} is not confirmed yet. Type the 6-digit code we emailed you, or ask for a new one.`
+      }
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (code.length === 6 && !busy) verify(code);
+        }}
+        className="flex flex-col gap-4"
+      >
+        <label className="flex flex-col gap-2 text-sm text-muted">
+          6-digit code
+          <input
+            value={code}
+            onChange={(e) => onChange(e.target.value)}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="[0-9]*"
+            maxLength={6}
+            autoFocus
+            placeholder="······"
+            className={`${inputClass} text-center font-mono text-2xl tracking-[0.5em]`}
+          />
+        </label>
+        {error && <Message kind="error">{error}</Message>}
+        {notice && <Message kind="ok">{notice}</Message>}
+        <button type="submit" disabled={busy || code.length !== 6} className={primaryButton}>
+          {busy ? "Checking…" : "Confirm"}
+        </button>
+      </form>
+      <div className="flex flex-col items-center gap-1 text-sm text-muted">
+        <button
+          type="button"
+          onClick={resend}
+          disabled={wait > 0 || busy}
+          className="flex min-h-11 items-center text-gold underline underline-offset-4 disabled:text-stone disabled:no-underline"
+        >
+          {wait > 0 ? `Send a new code in ${wait}s` : "Send me a new code"}
+        </button>
+        <button type="button" onClick={onChangeEmail} className="flex min-h-11 items-center text-muted underline underline-offset-4">
+          Use a different email
+        </button>
+        <Link href={`/login${withNext}`} className="flex min-h-11 items-center text-muted underline underline-offset-4">
+          Back to log in
+        </Link>
+      </div>
+    </Shell>
+  );
+}
+
 export function SignupForm({ next }: { next?: string }) {
   const router = useRouter();
   const after = safeNext(next);
   const withNext = next ? `?next=${encodeURIComponent(after)}` : "";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [checkEmail, setCheckEmail] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
+    const email = String(f.get("email")).trim();
     setBusy(true);
     setError("");
     const { data, error } = await createClient().auth.signUp({
-      email: String(f.get("email")).trim(),
+      email,
       password: String(f.get("password")),
       options: {
         data: { full_name: String(f.get("name")).trim() },
@@ -100,20 +227,23 @@ export function SignupForm({ next }: { next?: string }) {
     });
     setBusy(false);
     if (error) return setError(friendly(error.message));
+    // An email that already has an account comes back with no new identity (and no email is sent).
+    if (data.user && data.user.identities && data.user.identities.length === 0) {
+      return setError("That email already has an account. Try logging in.");
+    }
     if (data.session) router.push(after);
-    else setCheckEmail(true);
+    else setPendingEmail(email);
   }
 
-  if (checkEmail) {
+  if (pendingEmail) {
     return (
-      <Shell title="Check your email">
-        <Message kind="ok">
-          We sent you a link. Open it to confirm your email, then log in to set up your profile.
-        </Message>
-        <Link href={`/login${withNext}`} className="text-center text-sm text-gold underline-offset-4 hover:underline">
-          Go to log in
-        </Link>
-      </Shell>
+      <VerifyCodeForm
+        email={pendingEmail}
+        after={after}
+        withNext={withNext}
+        alreadySent
+        onChangeEmail={() => setPendingEmail(null)}
+      />
     );
   }
 
@@ -159,21 +289,37 @@ export function LoginForm({ next }: { next?: string }) {
   const withNext = next ? `?next=${encodeURIComponent(after)}` : "";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
+    const email = String(f.get("email")).trim();
     setBusy(true);
     setError("");
     const { error } = await createClient().auth.signInWithPassword({
-      email: String(f.get("email")).trim(),
+      email,
       password: String(f.get("password")),
     });
     if (error) {
       setBusy(false);
+      // Signed up but never confirmed the email: let them type a code (or ask for a new one) right here.
+      if (/email not confirmed/i.test(error.message)) return setUnconfirmedEmail(email);
       return setError(friendly(error.message));
     }
     router.push(after);
+  }
+
+  if (unconfirmedEmail) {
+    return (
+      <VerifyCodeForm
+        email={unconfirmedEmail}
+        after={after}
+        withNext={withNext}
+        alreadySent={false}
+        onChangeEmail={() => setUnconfirmedEmail(null)}
+      />
+    );
   }
 
   return (

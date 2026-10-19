@@ -260,7 +260,7 @@ Button: Back to home
 
 **Welcome / verify email**
 Subject: Welcome to Tapvane. Please confirm your email
-Body: Hi [first name], welcome to Tapvane! Please confirm your email address to finish setting up your account. [Confirm email button]
+Body: Hi [first name], welcome to Tapvane! Please confirm your email address to finish setting up your account. Your confirmation code is [6-digit code]. Type it on the sign-up page, or tap [Confirm email button].
 
 **Order confirmation**
 Subject: Your Tapvane order [#order] is confirmed

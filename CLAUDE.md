@@ -68,6 +68,9 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - Speed lessons (Lighthouse mobile): CSS container-query units were very expensive when animated. `CardMockup` has a fixed-`width` mode (no container units) for small/animated uses; only the designer's live preview and admin use the responsive mode. `TapDemo` animates only while on screen and only `translate/rotate/opacity/scale`. Public header must not import the Supabase client (login state is read from the `sb-…-auth-token` cookie). Marketing links on profiles use `prefetch={false}`.
 - Always run `npm run build` before launch tasks: dev mode hides production-only problems. Lighthouse and the SQL/server-action test scripts live in the session scratch folder, not the project.
 
+## Email confirmation by code
+- Sign-up and "email not confirmed" log-ins use a 6-digit code (`VerifyCodeForm` in `AuthForms.tsx`: auto-checks at the 6th digit, 60-second resend wait, `verifyOtp` / `resend` with type `signup`). Needs the Supabase **Confirm signup** email template to contain `{{ .Token }}` (the link `{{ .ConfirmationURL }}` can stay too). Supabase's built-in email sender is limited to a few emails per hour for the whole project, so real delivery needs custom SMTP (Resend) once tapvane.com is verified. Password reset still uses a link.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.
