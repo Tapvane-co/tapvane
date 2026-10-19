@@ -179,11 +179,11 @@ Customer sees status in dashboard and gets an email on each change.
 - **Cards:** generate codes, assign/reassign cards to profiles, export CSV.
 - **Products & pricing:** edit prices, package contents, stock counts.
 - **Templates:** add/edit card templates and colour/finish options.
-- **Settings:** delivery fees, bank details, WhatsApp number, contact email. Start with WhatsApp **+234 902 591 8252** and email **nfc.taply.hub@gmail.com** as the default values. Every place these appear (floating chat button, Contact page, checkout "Send proof on WhatsApp", footer, **Terms page and Privacy page**) reads them from Settings, so changing them once updates the whole site.
+- **Settings:** delivery fees, bank details, WhatsApp number, contact email. Start with WhatsApp **+234 911 399 1292** and email **tapvane.co@gmail.com** as the default values. Every place these appear (floating chat button, Contact page, checkout "Send proof on WhatsApp", footer, **Terms page and Privacy page**) reads them from Settings, so changing them once updates the whole site.
 - Admin access restricted to admin accounts only.
 
 ### 7.9 Emails (automatic)
-Welcome/verify email, order confirmation, payment confirmed, status updates, password reset. Contact and reply-to email: **nfc.taply.hub@gmail.com**. Email services such as Resend need a domain you own to send automatic emails, so show this Gmail address as the contact/reply-to address until **tapvane.com** is verified with the email service, then send from an address on the domain (e.g. hello@tapvane.com). Ask the founder before setting this up.
+Welcome/verify email, order confirmation, payment confirmed, status updates, password reset. Contact and reply-to email: **tapvane.co@gmail.com**. Email services such as Resend need a domain you own to send automatic emails, so show this Gmail address as the contact/reply-to address until **tapvane.com** is verified with the email service, then send from an address on the domain (e.g. hello@tapvane.com). Ask the founder before setting this up.
 
 ## 8. Design Direction
 
@@ -284,8 +284,8 @@ Build and test each stage before moving on. Show the founder how to view the sit
 
 - [x] Delivery fees: within Makurdi ₦1,500, outside Makurdi ₦5,000
 - [x] Pickup address: Opp. Holy Ghost Catholic Church, Wadata, Makurdi
-- [x] WhatsApp number: +234 902 591 8252 (editable in admin Settings)
-- [x] Contact email: nfc.taply.hub@gmail.com (sending address on tapvane.com at launch, e.g. hello@tapvane.com)
+- [x] WhatsApp number: +234 911 399 1292 (editable in admin Settings)
+- [x] Contact email: tapvane.co@gmail.com (sending address on tapvane.com at launch, e.g. hello@tapvane.com)
 - [ ] Bank account details: founder enters these in admin Settings after the site is built (not in this file)
 - [x] Domain: tapvane.com (bought on Namecheap)
 - [x] Brand direction, colours and fonts (Noir & Gold, see Section 8)

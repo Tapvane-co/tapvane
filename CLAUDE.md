@@ -22,7 +22,7 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 ## Key rules
 - Chip stores `https://tapvane.com/c/[card-code]`, never the profile URL. `/c/` redirects to the assigned profile; admin can reassign.
 - Profile page `/p/[username]`: "Cover & icons" layout (PRD 7.5). Must be fast and work without login.
-- WhatsApp (+234 902 591 8252) and email (nfc.taply.hub@gmail.com) come from admin Settings, never typed into page code. Bank details likewise (entered by founder in admin, never in code).
+- WhatsApp (+234 911 399 1292) and email (tapvane.co@gmail.com) come from admin Settings, never typed into page code. Bank details likewise (entered by founder in admin, never in code).
 - Paystack payments are verified server-side via webhook only.
 - Secrets live only in `.env.local` (never committed). Supabase row-level security on all tables; admin routes restricted to admin accounts.
 

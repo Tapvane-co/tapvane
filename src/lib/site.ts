@@ -9,7 +9,7 @@ import type { Product } from "@/lib/shop";
 export type { Product } from "@/lib/shop";
 
 export type Settings = {
-  whatsappNumber: string; // as shown to people, e.g. "+234 902 591 8252"
+  whatsappNumber: string; // as shown to people, e.g. "+234 911 399 1292"
   contactEmail: string;
   instagramHandle: string; // empty until the founder sets it
   openingHours: string; // empty until the founder sets it
@@ -21,8 +21,8 @@ export type Settings = {
 
 // The starting values from the PRD. Used only if a setting is missing from the database.
 const defaultSettings: Settings = {
-  whatsappNumber: "+234 902 591 8252",
-  contactEmail: "nfc.taply.hub@gmail.com",
+  whatsappNumber: "+234 911 399 1292",
+  contactEmail: "tapvane.co@gmail.com",
   instagramHandle: "",
   openingHours: "",
   pickupAddress: "Opp. Holy Ghost Catholic Church, Wadata, Makurdi, Benue State",

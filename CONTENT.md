@@ -174,8 +174,8 @@ Chat with us on WhatsApp. We usually reply within 24 hours.
 **Title:** Talk to us
 **Intro:** Questions about cards, bulk orders or your profile? We're happy to help.
 
-- **WhatsApp (fastest):** +234 902 591 8252 → button: Chat on WhatsApp (links to https://wa.me/2349025918252)
-- **Email:** nfc.taply.hub@gmail.com
+- **WhatsApp (fastest):** +234 911 399 1292 → button: Chat on WhatsApp (links to https://wa.me/2349113991292)
+- **Email:** tapvane.co@gmail.com
 - **Instagram:** [@handle]
 - **Pickup location:** Opp. Holy Ghost Catholic Church, Wadata, Makurdi, Benue State
 - **Hours:** [e.g. Monday–Saturday, 9am–6pm]
@@ -305,7 +305,7 @@ Body: We received a request to reset your password. Click the button below to ch
 9. **Limitation of liability.** To the extent allowed by law, our liability is limited to the amount you paid for the product.
 10. **Changes.** We may update these terms. We'll post the new version on this page with the updated date.
 11. **Governing law.** These terms are governed by the laws of the Federal Republic of Nigeria.
-12. **Contact.** Email: nfc.taply.hub@gmail.com · WhatsApp: +234 902 591 8252
+12. **Contact.** Email: tapvane.co@gmail.com · WhatsApp: +234 911 399 1292
 
 ---
 
@@ -315,7 +315,7 @@ Body: We received a request to reset your password. Click the button below to ch
 
 **Last updated:** [date]
 
-1. **Who we are.** Tapvane ([registered business name]), Makurdi, Benue State, Nigeria, is responsible for the personal data described here. Contact: nfc.taply.hub@gmail.com or WhatsApp +234 902 591 8252.
+1. **Who we are.** Tapvane ([registered business name]), Makurdi, Benue State, Nigeria, is responsible for the personal data described here. Contact: tapvane.co@gmail.com or WhatsApp +234 911 399 1292.
 2. **What we collect.**
    - **Account data:** name, email address, password (stored securely, never in plain text).
    - **Order data:** phone number, delivery address, order details, payment status and receipts you upload. Card payments are handled by Paystack; we don't store your card details.
@@ -324,8 +324,8 @@ Body: We received a request to reset your password. Click the button below to ch
 4. **How we use your data.** To process and deliver orders, run your account and profile, send order and account emails, provide support, and improve our service. We don't sell your data.
 5. **Who we share it with.** Only service providers we need to run Tapvane: payment processing (Paystack), hosting and database (e.g. Vercel, Supabase), email delivery, and delivery partners (name, phone and address only). They may process data outside Nigeria with appropriate safeguards.
 6. **How long we keep it.** Account and profile data: while your account is active. Order records: as required for accounting and legal purposes, [e.g. 6 years].
-7. **Your rights.** You can access, correct, download or delete your data, and withdraw consent at any time. Edit your profile from your dashboard, or contact nfc.taply.hub@gmail.com to delete your account.
+7. **Your rights.** You can access, correct, download or delete your data, and withdraw consent at any time. Edit your profile from your dashboard, or contact tapvane.co@gmail.com to delete your account.
 8. **Security.** We use secure login, encrypted connections (HTTPS), and access controls to protect your data.
 9. **Cookies.** We use essential cookies to keep you logged in. [Add analytics cookies here if used later.]
 10. **Changes.** We'll post updates on this page with a new date.
-11. **Complaints.** Contact us first at nfc.taply.hub@gmail.com or on WhatsApp at +234 902 591 8252. You may also contact the Nigeria Data Protection Commission (NDPC).
+11. **Complaints.** Contact us first at tapvane.co@gmail.com or on WhatsApp at +234 911 399 1292. You may also contact the Nigeria Data Protection Commission (NDPC).

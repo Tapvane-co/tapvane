@@ -68,8 +68,8 @@ create policy "Admins manage settings"
   using (public.is_admin()) with check (public.is_admin());
 
 insert into public.settings (key, value) values
-  ('whatsapp_number',        '+234 902 591 8252'),
-  ('contact_email',          'nfc.taply.hub@gmail.com'),
+  ('whatsapp_number',        '+234 911 399 1292'),
+  ('contact_email',          'tapvane.co@gmail.com'),
   ('instagram_handle',       ''),
   ('opening_hours',          ''),
   ('pickup_address',         'Opp. Holy Ghost Catholic Church, Wadata, Makurdi, Benue State'),
