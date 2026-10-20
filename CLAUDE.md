@@ -71,6 +71,9 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 ## Email confirmation by code
 - Sign-up and "email not confirmed" log-ins use a 6-digit code (`VerifyCodeForm` in `AuthForms.tsx`: auto-checks at the 6th digit, 60-second resend wait, `verifyOtp` / `resend` with type `signup`). It is OFF unless `NEXT_PUBLIC_EMAIL_CODE=on` (until then people are told about the link). Turn it on only after the Supabase **Confirm signup** email template contains `{{ .Token }}` (Supabase only lets you edit templates once custom SMTP is set up) (the link `{{ .ConfirmationURL }}` can stay too). Supabase's built-in email sender is limited to a few emails per hour for the whole project, so real delivery needs custom SMTP (Resend) once tapvane.com is verified. Password reset still uses a link.
 
+## Site lock (pre-launch)
+- While the Railway variable `SITE_LOCK_PASSWORD` is set, every page shows "Coming soon" (`src/app/locked/page.tsx`); the founder types the password under "Team access" to get a 30-day cookie (`src/proxy.ts`, `src/app/api/unlock/route.ts`, `src/lib/site-lock.ts`). Delete the variable (and redeploy) to go public. The Paystack webhook stays open. No code change is needed to lock or unlock; the password is a secret the founder types into Railway himself.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.
