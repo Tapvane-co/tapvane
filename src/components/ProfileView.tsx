@@ -68,13 +68,7 @@ export default function ProfileView({ profile, preview = false }: { profile: Pro
         </div>
 
         <div className="mt-auto pt-10">
-          <a
-            href={`/p/${profile.username}/vcard`}
-            className="flex min-h-12 w-full items-center justify-center rounded-full bg-gold px-6 font-semibold text-onyx"
-          >
-            Save Contact
-          </a>
-          <p className="mt-6 text-center text-xs text-stone">
+          <p className="text-center text-xs text-stone">
             <Link href="/" prefetch={false} className="underline-offset-4 hover:underline">
               Get your own Tapvane card
             </Link>
