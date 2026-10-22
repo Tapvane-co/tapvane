@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CardColours, CardLayout, Finish } from "@/lib/shop";
 import { initials } from "@/lib/profiles";
+import QrCode from "@/components/QrCode";
 
 // The Tapvane card, drawn in code (PRD section 8). Used on the website and in the card designer.
 //
@@ -41,6 +42,7 @@ export default function CardMockup({
   title = "Tap. Share. Connect.",
   company = "",
   width,
+  qrValue = "https://tapvane.com",
   className = "",
 }: {
   side?: "front" | "back";
@@ -51,6 +53,8 @@ export default function CardMockup({
   title?: string;
   company?: string;
   width?: number;
+  // What the QR code on the back opens. On the website it is a sample; the production sheet passes the card's real chip address.
+  qrValue?: string;
   className?: string;
 }) {
   const subtitle = [title, company].filter(Boolean).join(" · ");
@@ -72,10 +76,16 @@ export default function CardMockup({
         aria-label="Back of a Tapvane card"
       >
         {glossy && <div className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-black/15" />}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display uppercase tracking-[0.3em]" style={{ fontSize: u(9) }}>Tapvane</span>
-          <span className="uppercase tracking-[0.25em]" style={{ fontSize: u(3), marginTop: u(2) }}>Tap to connect</span>
+        <div className="absolute flex flex-col justify-center" style={{ left: u(7), top: 0, bottom: 0, right: u(46) }}>
+          <span className="font-display uppercase tracking-[0.3em]" style={{ fontSize: u(7) }}>Tapvane</span>
+          <span className="uppercase tracking-[0.25em]" style={{ fontSize: u(2.8), marginTop: u(2.2) }}>Tap or scan</span>
+          <span className="opacity-70" style={{ fontSize: u(2.4), marginTop: u(1) }}>to connect</span>
         </div>
+        <QrCode
+          value={qrValue}
+          className="absolute"
+          style={{ right: u(6), top: "50%", transform: "translateY(-50%)", width: u(34), height: u(34), borderRadius: u(2) }}
+        />
       </div>
     );
   }

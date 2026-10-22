@@ -74,6 +74,11 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 ## Site lock (pre-launch)
 - While the Railway variable `SITE_LOCK_PASSWORD` is set, every page shows "Coming soon" (`src/app/locked/page.tsx`); the founder types the password under "Team access" to get a 30-day cookie (`src/proxy.ts`, `src/app/api/unlock/route.ts`, `src/lib/site-lock.ts`). Delete the variable (and redeploy) to go public. The Paystack webhook stays open. No code change is needed to lock or unlock; the password is a secret the founder types into Railway himself.
 
+- Railway: the live project is **authentic-hope** (service `tapvane`), under the Railway account **benedictnongov@gmail.com** (GitHub `benedictnon`). A second account (tapvane.co@gmail.com / GitHub `Tapvane-co`) holds an empty project `refreshing-connection`; don't use it. The lock was switched on 2026-10-20 by adding `SITE_LOCK_PASSWORD` there.
+
+## QR code on the card back
+- The back of every card carries a QR code for phones without NFC (`QrCode.tsx`, drawn as one SVG path via the `qrcode` package; light tile + dark modules so it scans on any colour set). It encodes the same address as the chip, `https://tapvane.com/c/CODE`. On the website and in the designer `CardMockup` shows a SAMPLE QR (`qrValue` default `https://tapvane.com`); only the production sheet (`AdminOrderPrint.tsx`) passes each card's real code. The sheet suggests the next free unassigned card codes (editable); the code printed in the QR must be the code written to that card's chip and assigned in Admin → Cards. Decoded and checked with jsQR.
+
 ## Stack
 Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.

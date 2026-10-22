@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import CardMockup from "@/components/CardMockup";
 import { orderRef, rowToOrder, type Order, type OrderLine } from "@/lib/orders";
 import { createClient } from "@/lib/supabase/client";
+import { chipUrl } from "@/lib/cards";
 
 type Design = NonNullable<OrderLine["design"]>;
 
@@ -24,12 +25,22 @@ export default function AdminOrderPrint({ number }: { number: number }) {
   const supabase = useMemo(() => createClient(), []);
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
   const [customer, setCustomer] = useState("");
+  // Free card codes, offered in order so each printed QR matches a chip you can write and assign.
+  const [free, setFree] = useState<string[]>([]);
+  const [edits, setEdits] = useState<Record<string, string>>({});
 
   useEffect(() => {
     supabase.from("orders").select("*").eq("order_number", number).maybeSingle().then(({ data }) => {
       setOrder(data ? rowToOrder(data) : null);
       setCustomer(data?.customer_name ?? "");
     });
+    supabase
+      .from("cards")
+      .select("card_code")
+      .eq("status", "unassigned")
+      .neq("type", "tag")
+      .order("created_at")
+      .then(({ data }) => setFree((data ?? []).map((c) => c.card_code)));
   }, [supabase, number]);
 
   if (order === undefined) return <p className="text-muted">Loading…</p>;
@@ -37,6 +48,11 @@ export default function AdminOrderPrint({ number }: { number: number }) {
 
   const lines = order.items.filter((l) => l.design);
   const tags = order.items.filter((l) => !l.design);
+
+  // Every card on this sheet gets one code: the one you typed, or the next free one.
+  let counter = 0;
+  const codeFor = (key: string, index: number) => (edits[key] ?? free[index] ?? "").trim().toUpperCase();
+  const validCode = (c: string) => /^[A-Z0-9-]{6,20}$/.test(c);
 
   return (
     <div className={`${exact} rounded-2xl bg-white p-6 text-black print:rounded-none print:p-0`}>
@@ -72,23 +88,52 @@ export default function AdminOrderPrint({ number }: { number: number }) {
               </tbody>
             </table>
 
-            <div className="mt-4 flex flex-wrap gap-6">
-              <figure>
-                <div style={{ width: "85.6mm" }}>
-                  <CardMockup side="back" colours={c} finish={d.finish} layout={d.template.layout} />
-                </div>
-                <figcaption className="mt-1 text-xs text-neutral-600">Back (same for every card)</figcaption>
-              </figure>
-              {(d.details_later ? [{ name: "", title: "", company: "" }] : d.cards).map((card, k) => (
-                <figure key={k} className="break-inside-avoid">
-                  <div style={{ width: "85.6mm" }}>
-                    <CardMockup side="front" colours={c} finish={d.finish} layout={d.template.layout} name={card.name} title={card.title} company={card.company} />
+            <p className="mt-3 text-xs text-neutral-600 print:hidden">
+              Each back has its own QR code. It opens the card&apos;s chip address, so it must match the code you write onto that card&apos;s chip. The codes below are the next free ones; change one if you want a different card.
+            </p>
+            <div className="mt-4 flex flex-col gap-6">
+              {(d.details_later ? [{ name: "", title: "", company: "" }] : d.cards).map((card, k) => {
+                const index = counter++;
+                const key = `${li}-${k}`;
+                const code = codeFor(key, index);
+                const ok = validCode(code);
+                return (
+                  <div key={k} className="break-inside-avoid">
+                    <div className="flex flex-wrap gap-6">
+                      <figure>
+                        <div style={{ width: "85.6mm" }}>
+                          <CardMockup side="front" colours={c} finish={d.finish} layout={d.template.layout} name={card.name} title={card.title} company={card.company} />
+                        </div>
+                        <figcaption className="mt-1 text-xs">
+                          {d.details_later ? "Front (placeholder: text to be supplied)" : `Card ${k + 1} front: ${[card.name, card.title, card.company].filter(Boolean).join(" · ")}`}
+                        </figcaption>
+                      </figure>
+                      <figure>
+                        <div style={{ width: "85.6mm" }}>
+                          <CardMockup side="back" colours={c} finish={d.finish} layout={d.template.layout} qrValue={ok ? chipUrl(code) : undefined} />
+                        </div>
+                        <figcaption className="mt-1 text-xs">
+                          {ok ? (
+                            <>Back: QR opens <span className="font-mono">{chipUrl(code)}</span></>
+                          ) : (
+                            <span className="font-semibold text-red-700">No card code yet: this QR is only a sample. Type a code below.</span>
+                          )}
+                        </figcaption>
+                      </figure>
+                    </div>
+                    <label className="mt-2 flex items-center gap-2 text-xs print:hidden">
+                      Card code for this card
+                      <input
+                        value={edits[key] ?? free[index] ?? ""}
+                        onChange={(e) => setEdits((prev) => ({ ...prev, [key]: e.target.value.toUpperCase() }))}
+                        spellCheck={false}
+                        className="min-h-9 w-44 rounded border border-neutral-400 px-2 font-mono tracking-widest"
+                        aria-label={`Card code for card ${k + 1}`}
+                      />
+                    </label>
                   </div>
-                  <figcaption className="mt-1 text-xs">
-                    {d.details_later ? "Front (placeholder: text to be supplied)" : `Card ${k + 1}: ${[card.name, card.title, card.company].filter(Boolean).join(" · ")}`}
-                  </figcaption>
-                </figure>
-              ))}
+                );
+              })}
             </div>
           </section>
         );
