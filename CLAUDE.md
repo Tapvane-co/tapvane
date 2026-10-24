@@ -76,6 +76,8 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 
 - Railway: the live project is **authentic-hope** (service `tapvane`), under the Railway account **benedictnongov@gmail.com** (GitHub `benedictnon`). A second account (tapvane.co@gmail.com / GitHub `Tapvane-co`) holds an empty project `refreshing-connection`; don't use it. The lock was switched on 2026-10-20 by adding `SITE_LOCK_PASSWORD` there.
 
+- **Deploys come from a SECOND repo.** Railway (account benedictnongov@gmail.com / GitHub `benedictnon`) can only see `benedictnon/visionary-kleicha` (private), not `Tapvane-co/tapvane`. The code is therefore pushed to BOTH: `git push origin main` is set up with two push URLs (Tapvane-co/tapvane and benedictnon/visionary-kleicha). Railway's service Source = visionary-kleicha, branch main, auto-deploy on. `Tapvane-co` is a collaborator on that repo, and `benedictnon` on Tapvane-co/tapvane. NEVER reconnect Railway to a repo without checking its contents first (an empty Netlify starter once replaced the live site; fixed by Rollback on the previous deployment).
+
 ## QR code on the card back
 - The back of every card carries a QR code for phones without NFC (`QrCode.tsx`, drawn as one SVG path via the `qrcode` package; light tile + dark modules so it scans on any colour set). It encodes the same address as the chip, `https://tapvane.com/c/CODE`. On the website and in the designer `CardMockup` shows a SAMPLE QR (`qrValue` default `https://tapvane.com`); only the production sheet (`AdminOrderPrint.tsx`) passes each card's real code. The sheet suggests the next free unassigned card codes (editable); the code printed in the QR must be the code written to that card's chip and assigned in Admin → Cards. Decoded and checked with jsQR.
 
