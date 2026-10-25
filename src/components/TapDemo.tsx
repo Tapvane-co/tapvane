@@ -4,10 +4,10 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import CardMockup from "@/components/CardMockup";
 import { icons } from "@/components/icons";
 
-// A looping demo, built in code (no video): card tapped -> profile opens -> Save Contact -> Contact saved.
+// A looping demo, built in code (no video): card tapped -> profile opens -> tap WhatsApp -> connected.
 // Light on mobile data. If the visitor has "reduce motion" turned on, it shows the opened profile and stays still.
 
-const captions = ["Tap the card", "Your profile opens", "Tap Save Contact", "Contact saved"];
+const captions = ["Tap the card", "Your profile opens", "Tap WhatsApp", "You're connected"];
 const STEP_MS = 2300;
 
 function subscribeReducedMotion(onChange: () => void) {
@@ -48,7 +48,7 @@ export default function TapDemo({ className = "" }: { className?: string }) {
       <div
         className="relative h-[400px] w-full"
         role="img"
-        aria-label="Animation: a Tapvane card is tapped on a phone, the profile opens, and the contact is saved."
+        aria-label="Animation: a Tapvane card is tapped on a phone, the profile opens, and the visitor taps WhatsApp to connect."
       >
         {/* The phone */}
         <div className="absolute right-2 top-0 z-10 h-[380px] w-[190px] overflow-hidden rounded-[34px] border-[3px] border-line bg-onyx shadow-2xl shadow-black/60">
@@ -88,18 +88,18 @@ export default function TapDemo({ className = "" }: { className?: string }) {
                   saving ? "scale-95 ring-4 ring-gold/40" : ""
                 }`}
               >
-                Save Contact
+                WhatsApp
               </span>
             </div>
           </div>
 
-          {/* "Contact saved" message */}
+          {/* "Connected" message */}
           <div
             className={`absolute inset-x-3 bottom-16 flex items-center justify-center gap-2 rounded-full border border-gold bg-charcoal px-3 py-2 text-xs text-ivory transition-[opacity,translate] duration-500 motion-reduce:transition-none ${
               saved ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
           >
-            <span className="text-gold">✓</span> Contact saved
+            <span className="text-gold">✓</span> Connected
           </div>
         </div>
 

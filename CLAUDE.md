@@ -82,5 +82,5 @@ Delivery: pickup free (Opp. Holy Ghost Catholic Church, Wadata, Makurdi) · with
 - The back of every card carries a QR code for phones without NFC (`QrCode.tsx`, drawn as one SVG path via the `qrcode` package; light tile + dark modules so it scans on any colour set). It encodes the same address as the chip, `https://tapvane.com/c/CODE`. On the website and in the designer `CardMockup` shows a SAMPLE QR (`qrValue` default `https://tapvane.com`); only the production sheet (`AdminOrderPrint.tsx`) passes each card's real code. The sheet suggests the next free unassigned card codes (editable); the code printed in the QR must be the code written to that card's chip and assigned in Admin → Cards. Decoded and checked with jsQR.
 
 ## Stack
-Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Vercel.
+Next.js (App Router, TypeScript, `src/`) + Tailwind v4 + Supabase + Paystack + Resend + Railway (hosting).
 Run locally: `npm run dev` then open http://localhost:3000. Next.js here is a newer version; check `node_modules/next/dist/docs/` before using unfamiliar APIs.

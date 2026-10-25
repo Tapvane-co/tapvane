@@ -31,7 +31,7 @@ Works with most modern phones · Update your details anytime · Delivered nation
 - **Never run out of cards.** One Tapvane card replaces hundreds of paper cards.
 - **Always up to date.** Changed your number or job? Update your profile and your card shows the new details. No reprinting.
 - **More than a phone number.** Share WhatsApp, Instagram, LinkedIn, your website and your location, all at once.
-- **Saves straight to contacts.** People tap "Save Contact" and your details land in their phone. Nobody types your number wrong.
+- **One tap to reach you.** People tap Call or WhatsApp on your profile and they are straight through to you. Nobody types your number wrong.
 - **Made to impress.** A premium card that starts conversations and makes you memorable.
 
 ### Packages (preview)
@@ -102,7 +102,7 @@ Show the first 4 questions from the FAQ page, then a link: **See all questions �
 ## 3. Packages page (`/packages`)
 
 **Title:** Packages
-**Intro:** Every package includes a Tapvane digital profile you can edit anytime, free updates, and a "Save Contact" button.
+**Intro:** Every package includes a Tapvane digital profile you can edit anytime, and free updates.
 
 Use the package cards from the Home page with these extra details:
 
@@ -322,7 +322,7 @@ Body: We received a request to reset your password. Click the button below to ch
    - **Profile data:** whatever you choose to add: photo, job title, phone, WhatsApp, email, socials, location, bio.
 3. **Public profile.** Information you add to your profile is **public** to anyone who taps your card or opens your profile link. Only add what you're happy to share.
 4. **How we use your data.** To process and deliver orders, run your account and profile, send order and account emails, provide support, and improve our service. We don't sell your data.
-5. **Who we share it with.** Only service providers we need to run Tapvane: payment processing (Paystack), hosting and database (e.g. Vercel, Supabase), email delivery, and delivery partners (name, phone and address only). They may process data outside Nigeria with appropriate safeguards.
+5. **Who we share it with.** Only service providers we need to run Tapvane: payment processing (Paystack), hosting and database (e.g. Railway, Supabase), email delivery, and delivery partners (name, phone and address only). They may process data outside Nigeria with appropriate safeguards.
 6. **How long we keep it.** Account and profile data: while your account is active. Order records: as required for accounting and legal purposes, [e.g. 6 years].
 7. **Your rights.** You can access, correct, download or delete your data, and withdraw consent at any time. Edit your profile from your dashboard, or contact tapvane.co@gmail.com to delete your account.
 8. **Security.** We use secure login, encrypted connections (HTTPS), and access controls to protect your data.

@@ -89,7 +89,7 @@ export const whyTapvane = [
   { title: "Never run out of cards.", body: "One Tapvane card replaces hundreds of paper cards." },
   { title: "Always up to date.", body: "Changed your number or job? Update your profile and your card shows the new details. No reprinting." },
   { title: "More than a phone number.", body: "Share WhatsApp, Instagram, LinkedIn, your website and your location, all at once." },
-  { title: "Saves straight to contacts.", body: 'People tap "Save Contact" and your details land in their phone. Nobody types your number wrong.' },
+  { title: "One tap to reach you.", body: "People tap Call or WhatsApp on your profile and they are straight through to you. Nobody types your number wrong." },
   { title: "Made to impress.", body: "A premium card that starts conversations and makes you memorable." },
 ];
 
