@@ -23,7 +23,7 @@ Works with most modern phones · Update your details anytime · Delivered nation
 
 1. **Choose & customise.** Pick a package and design your card: choose a template, your colours, and add your name.
 2. **Set up your profile.** Add your phone, WhatsApp, email, socials and photo. This is what people see when they tap.
-3. **Tap to share.** Hold your card near any phone. Your profile opens instantly, and they can save your contact in one tap.
+3. **Tap to share.** Hold your card near any phone. Your profile opens instantly, and they can call or message you in one tap.
 
 ### Why Tapvane
 **Section title:** One card. Endless first impressions.
@@ -91,7 +91,7 @@ Show the first 4 questions from the FAQ page, then a link: **See all questions �
 
 **Step 3: Receive your card.** We print your card, link it to your profile, and deliver it to you, or you can pick it up in Makurdi.
 
-**Step 4: Tap and share.** Hold the top of your card against the back of the other person's phone (near the camera on most phones). Your profile pops up, and they can save your contact with one tap.
+**Step 4: Tap and share.** Hold the top of your card against the back of the other person's phone (near the camera on most phones). Your profile pops up, and they can call or message you with one tap.
 
 **Tip box:** On iPhones, tap near the top of the phone. On Android, make sure NFC is turned on in Settings (it's on by default on most phones).
 

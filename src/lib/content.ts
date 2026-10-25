@@ -82,7 +82,7 @@ export const trustStrip = [
 export const homeSteps = [
   { title: "Choose & customise.", body: "Pick a package and design your card: choose a template, your colours, and add your name." },
   { title: "Set up your profile.", body: "Add your phone, WhatsApp, email, socials and photo. This is what people see when they tap." },
-  { title: "Tap to share.", body: "Hold your card near any phone. Your profile opens instantly, and they can save your contact in one tap." },
+  { title: "Tap to share.", body: "Hold your card near any phone. Your profile opens instantly, and they can call or message you in one tap." },
 ];
 
 export const whyTapvane = [
@@ -97,5 +97,5 @@ export const howItWorksSteps = [
   { title: "Step 1: Order and design your card.", body: "Choose a package, pick a template and colour, and add your name and job title. You'll see a live preview before you pay." },
   { title: "Step 2: Create your profile.", body: "Sign up and fill in your details: photo, phone, WhatsApp, email, socials, location and a short bio. You can change these anytime from your dashboard." },
   { title: "Step 3: Receive your card.", body: "We print your card, link it to your profile, and deliver it to you, or you can pick it up in Makurdi." },
-  { title: "Step 4: Tap and share.", body: "Hold the top of your card against the back of the other person's phone (near the camera on most phones). Your profile pops up, and they can save your contact with one tap." },
+  { title: "Step 4: Tap and share.", body: "Hold the top of your card against the back of the other person's phone (near the camera on most phones). Your profile pops up, and they can call or message you with one tap." },
 ];
