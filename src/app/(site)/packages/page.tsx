@@ -73,7 +73,7 @@ export default function PackagesPage() {
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
       <h1 className="font-display text-4xl text-ivory md:text-5xl">Packages</h1>
       <p className="mt-4 max-w-2xl text-muted">
-        Every package includes a Tapvane digital profile you can edit anytime, free updates, and a &ldquo;Save Contact&rdquo; button.
+        Every package includes a Tapvane digital profile you can edit anytime, and free updates.
       </p>
 
       <div className="mt-12">

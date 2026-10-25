@@ -39,7 +39,7 @@ async function Privacy() {
     },
     {
       title: "Who we share it with",
-      body: "Only service providers we need to run Tapvane: payment processing (Paystack), hosting and database (e.g. Vercel, Supabase), email delivery, and delivery partners (name, phone and address only). They may process data outside Nigeria with appropriate safeguards.",
+      body: "Only service providers we need to run Tapvane: payment processing (Paystack), hosting and database (e.g. Railway, Supabase), email delivery, and delivery partners (name, phone and address only). They may process data outside Nigeria with appropriate safeguards.",
     },
     {
       title: "How long we keep it",
