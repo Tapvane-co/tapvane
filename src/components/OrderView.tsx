@@ -166,6 +166,13 @@ export default function OrderView({ number, thankYou = false, reference }: { num
       )}
       {thankYou && o.status === "awaiting_confirmation" && <p className="mt-3 text-muted">Order number: {orderRef(o.orderNumber)}.</p>}
 
+      {showProfileCta && o.items.some((l) => l.type === "pro") && (
+        <p className="mt-3 text-muted">
+          Your Pro profile styling is ready: add a cover image and your own accent colour while you set up your profile.
+          They show on your public profile as soon as your payment is confirmed.
+        </p>
+      )}
+
       {showProfileCta && (
         <Link href="/dashboard" className={`${goldButton} mt-6 inline-flex`}>
           Set up my profile

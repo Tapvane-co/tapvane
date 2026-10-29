@@ -128,6 +128,8 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
   const [profileId, setProfileId] = useState<string | null>(null);
   const [isActive, setIsActive] = useState(true);
   const [isPro, setIsPro] = useState(false);
+  // A Pro order has been placed (not cancelled): the styling tools unlock now; the public page shows it once paid.
+  const [hasProOrder, setHasProOrder] = useState(false);
   const [form, setForm] = useState<Form>(empty);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -172,7 +174,13 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
         .eq("owner_user_id", auth.user.id)
         .order("created_at")
         .limit(1);
+      const { data: orders } = await supabase.from("orders").select("status, items").eq("user_id", auth.user.id);
       if (cancelled) return;
+      setHasProOrder(
+        !!orders?.some(
+          (o) => o.status !== "cancelled" && Array.isArray(o.items) && o.items.some((i: { type?: string }) => i?.type === "pro"),
+        ),
+      );
       setUserId(auth.user.id);
       setFirstName((rows?.[0]?.full_name ?? meta).split(" ")[0] ?? "");
       if (rows && rows.length) {
@@ -250,7 +258,7 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
     // Admin may use reserved names like "demo" (customers may not).
     if (!isAdminMode && reservedUsernames.has(username)) return setError("That username is not available. Please choose another.");
     if (!form.fullName.trim()) return setError("Please enter your name.");
-    const proStyle = isAdminMode || isPro;
+    const proStyle = isAdminMode || isPro || hasProOrder;
     if (proStyle && form.accentColor && !isReadableAccent(form.accentColor)) {
       return setError("That accent colour is too dark to read on the black profile. Please choose a lighter one.");
     }
@@ -300,8 +308,9 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
   }
 
   const incomplete = !profileId;
-  const previewProfile = toProfile(form, isPro);
-  const showProTools = isPro;
+  // The preview shows the styling as soon as a Pro order exists; the public page waits for payment (isPro).
+  const previewProfile = toProfile(form, isPro || hasProOrder);
+  const showProTools = isPro || hasProOrder;
   const accentNow = form.accentColor || defaultAccent;
 
   return (
@@ -365,6 +374,11 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
               <h2 className="font-display text-xl text-ivory">
                 Pro styling <span className="ml-2 rounded-full border border-gold px-2 py-0.5 align-middle text-[10px] uppercase tracking-widest text-gold">Pro</span>
               </h2>
+              {!isAdminMode && !isPro && (
+                <p className="-mt-2 text-sm text-muted">
+                  Set these up now. Your cover image and colour appear on your public profile as soon as we confirm your payment.
+                </p>
+              )}
 
               <div>
                 <p className="text-sm text-muted">Cover image</p>
