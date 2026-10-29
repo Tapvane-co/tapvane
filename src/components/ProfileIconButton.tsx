@@ -10,7 +10,7 @@ type Props = {
 // Round outlined button with a gold icon and a small label (PRD 7.5).
 export function ProfileIconButton({ label, children, href, onClick }: Props) {
   const circle =
-    "flex h-[54px] w-[54px] items-center justify-center rounded-full border border-line text-gold transition-colors hover:border-gold";
+    "flex h-[54px] w-[54px] items-center justify-center rounded-full border border-line text-[var(--accent,#c9a34e)] transition-colors hover:border-[var(--accent,#c9a34e)]";
   return (
     <div className="flex flex-col items-center gap-2">
       {href ? (

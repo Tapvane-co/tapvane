@@ -59,7 +59,7 @@ function buildCards(products: Product[], stock: StockRow[]): Card[] {
       key: "business",
       name: "Business",
       price: `from ${formatNaira(Math.min(...business.map((p) => p.price)))}`,
-      description: `${options}, each with its own digital profile. Manage your whole team from one dashboard.`,
+      description: `${options}, each with its own digital profile.`,
       audience: "For: small businesses and teams.",
       button: "Choose Business",
       href: "/customise?package=business",

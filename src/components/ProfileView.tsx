@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ProfileIconButton } from "@/components/ProfileIconButton";
 import ShareButton from "@/components/ShareButton";
 import { icons } from "@/components/icons";
-import { initials, mapsUrl, socialUrl, type Profile } from "@/lib/profiles";
+import { initials, isValidAccent, mapsUrl, socialUrl, type Profile } from "@/lib/profiles";
 
 function buttonsFor(p: Profile) {
   const items: { label: string; href: string; icon: React.ReactNode }[] = [];
@@ -32,25 +32,33 @@ export default function ProfileView({ profile, preview = false }: { profile: Pro
   const items = buttonsFor(profile);
   const subtitle = [profile.title, profile.company].filter(Boolean).join(" · ");
   const name = profile.fullName || "Your name";
+  // Cover image and accent colour are Pro features: ignored on every other profile.
+  const accent = profile.isPro && profile.accentColor && isValidAccent(profile.accentColor) ? profile.accentColor : undefined;
+  const cover = profile.isPro ? profile.coverUrl : undefined;
+  const wrapStyle = accent ? ({ "--accent": accent } as React.CSSProperties) : undefined;
 
   return (
-    <div className={`mx-auto flex w-full max-w-md flex-1 flex-col bg-onyx ${preview ? "pointer-events-none select-none" : ""}`}>
+    <div
+      className={`mx-auto flex w-full max-w-md flex-1 flex-col bg-onyx [--accent:#c9a34e] ${preview ? "pointer-events-none select-none" : ""}`}
+      style={wrapStyle}
+    >
       <div
-        className="relative h-[150px] border-b border-gold bg-charcoal bg-cover bg-center"
-        style={profile.coverUrl ? { backgroundImage: `url(${profile.coverUrl})` } : undefined}
+        className="relative h-[150px] border-b border-[var(--accent)] bg-charcoal bg-cover bg-center"
+        style={cover ? { backgroundImage: `url("${cover}")` } : undefined}
       >
-        <span className="absolute left-6 top-5 font-display text-xs uppercase tracking-[0.3em] text-gold">
+        {cover && <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-transparent" />}
+        <span className="absolute left-6 top-5 font-display text-xs uppercase tracking-[0.3em] text-[var(--accent)]">
           Tapvane
         </span>
       </div>
 
       <div className="flex flex-1 flex-col px-6 pb-8">
-        <div className="relative -mt-12 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-onyx bg-charcoal outline outline-1 outline-gold">
+        <div className="relative -mt-12 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-onyx bg-charcoal outline outline-1 outline-[var(--accent)]">
           {profile.photoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.photoUrl} alt={name} className="h-full w-full object-cover" />
           ) : (
-            <span className="font-display text-3xl text-gold">{initials(name)}</span>
+            <span className="font-display text-3xl text-[var(--accent)]">{initials(name)}</span>
           )}
         </div>
 

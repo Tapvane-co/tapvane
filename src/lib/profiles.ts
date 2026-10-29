@@ -8,8 +8,9 @@ export type Profile = {
   company?: string;
   bio?: string;
   photoUrl?: string;
-  coverUrl?: string;
+  coverUrl?: string; // Pro only
   accentColor?: string; // Pro only
+  isPro?: boolean; // set by Tapvane (admin) when the customer has the Pro package
   phone?: string;
   whatsapp?: string; // digits with country code, e.g. 2348000000000
   email?: string;
@@ -77,6 +78,7 @@ export function fromRow(r: any): Profile {
     photoUrl: r.photo_url ?? undefined,
     coverUrl: r.cover_url ?? undefined,
     accentColor: r.accent_color ?? undefined,
+    isPro: !!r.is_pro,
     phone: r.phone ?? undefined,
     whatsapp: r.whatsapp ?? undefined,
     email: r.email ?? undefined,
@@ -91,6 +93,27 @@ export function fromRow(r: any): Profile {
     isActive: r.is_active,
   };
 }
+
+// Pro profiles can pick their own accent colour. These presets all read well on the black profile page.
+export const defaultAccent = "#C9A34E";
+export const accentPresets = [
+  { name: "Gold", hex: "#C9A34E" },
+  { name: "Ivory", hex: "#EDE6D6" },
+  { name: "Sky", hex: "#6FB1E0" },
+  { name: "Emerald", hex: "#4FB286" },
+  { name: "Coral", hex: "#E8806A" },
+  { name: "Violet", hex: "#A98BE0" },
+  { name: "Amber", hex: "#E5A23C" },
+];
+
+export const isValidAccent = (v: string) => /^#[0-9A-Fa-f]{6}$/.test(v);
+
+// How bright a colour looks (0 = black, 1 = white). Accents must be bright enough to read on the black page.
+export function accentBrightness(hex: string) {
+  const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+export const isReadableAccent = (hex: string) => isValidAccent(hex) && accentBrightness(hex) >= 0.2;
 
 // Turns what a person typed into a clean phone number: 0803... or 234803... become +234803...
 export function normalizePhone(v: string) {

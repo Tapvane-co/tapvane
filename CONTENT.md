@@ -48,7 +48,7 @@ For: professionals who want to stand out.
 Button: Choose Pro
 
 **Business: from ₦80,000**
-5 cards for ₦80,000 or 10 cards for ₦150,000, each with its own digital profile. Manage your whole team from one dashboard.
+5 cards for ₦80,000 or 10 cards for ₦150,000, each with its own digital profile.
 For: small businesses and teams.
 Button: Choose Business
 
@@ -112,7 +112,6 @@ Use the package cards from the Home page with these extra details:
 | Card type | PVC | Matte finish | Standard PVC | Sticker tag |
 | Digital profile | Standard | Custom colours + cover image | One per card | Included |
 | Templates | Standard | Standard + premium | Standard | n/a |
-| Team dashboard | — | — | Yes | — |
 
 **Note under table:** Need more than 10 cards for your company or event? Chat with us on WhatsApp for a custom quote.
 

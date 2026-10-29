@@ -26,7 +26,6 @@ async function ComparisonTable() {
     { label: "Card type", cells: ["PVC", "Matte finish", "Standard PVC", "Sticker tag"] },
     { label: "Digital profile", cells: ["Standard", "Custom colours + cover image", "One per card", "Included"] },
     { label: "Templates", cells: ["Standard", "Standard + premium", "Standard", "n/a"] },
-    { label: "Team dashboard", cells: ["—", "—", "Yes", "—"] },
   ];
 
   return (
