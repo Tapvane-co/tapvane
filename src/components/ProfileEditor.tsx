@@ -467,7 +467,7 @@ export default function ProfileEditor({ adminProfileId }: { adminProfileId?: str
                 onChange={(e) => { setSaved(false); setIsPro(e.target.checked); }}
                 className="h-4 w-4 accent-[#C9A34E]"
               />
-              Pro profile (unlocks the cover image and accent colour; tick when the customer has the Pro package)
+              Pro profile (unlocks the cover image and accent colour; it switches on by itself when a Pro order is paid, so tick it by hand only for walk-in customers)
             </label>
           )}
 

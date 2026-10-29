@@ -25,8 +25,9 @@ language plpgsql
 set search_path = public
 as $$
 begin
-  -- Admins (and server tools with no signed-in person, such as the SQL editor) may change anything.
-  if auth.uid() is null or public.is_admin() then
+  -- Admins, server tools with no signed-in person (such as the SQL editor), and Tapvane's own trusted
+  -- database functions (which run as the database owner, not as a customer) may change anything.
+  if auth.uid() is null or public.is_admin() or current_user not in ('authenticated', 'anon') then
     return new;
   end if;
 
