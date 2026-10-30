@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/customise", priority: 0.7 },
     { path: "/faq", priority: 0.7 },
     { path: "/contact", priority: 0.6 },
-    { path: "/p/demo", priority: 0.5 },
+    { path: "/p/tapvane", priority: 0.5 },
     { path: "/terms", priority: 0.3 },
     { path: "/privacy", priority: 0.3 },
   ];

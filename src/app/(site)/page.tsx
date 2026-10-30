@@ -54,7 +54,7 @@ export default function Home() {
             <Link href="/packages" className={primaryLink}>
               Get your Tapvane card
             </Link>
-            <Link href="/p/demo" className={secondaryLink}>
+            <Link href="/p/tapvane" className={secondaryLink}>
               See a live profile
             </Link>
           </div>
@@ -132,7 +132,7 @@ export default function Home() {
         <p className="mt-4 max-w-2xl text-muted">
           Open a sample Tapvane profile on your phone. This is exactly what your contacts will get.
         </p>
-        <Link href="/p/demo" className={`${primaryLink} mt-8 inline-flex`}>
+        <Link href="/p/tapvane" className={`${primaryLink} mt-8 inline-flex`}>
           Open sample profile
         </Link>
       </section>
