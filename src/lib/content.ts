@@ -43,7 +43,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "I run a business. Which package should I choose?",
-    a: "Business packages give each staff member their own card and profile, all managed from one dashboard. Add NFC tags for your counter or tables so customers can reach you instantly.",
+    a: "Business packages give each staff member their own card and profile. Add NFC tags for your counter or tables so customers can reach you instantly.",
   },
   {
     q: "What can I use an NFC tag for?",

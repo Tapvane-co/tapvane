@@ -149,7 +149,7 @@ Yes. Choose from Tapvane templates, pick your colour and finish, and add your na
 Basic gets a PVC card and a standard profile. Pro gets a premium matte-finish card and a custom profile with your own accent colour and cover image.
 
 **I run a business. Which package should I choose?**
-Business packages give each staff member their own card and profile, all managed from one dashboard. Add NFC tags for your counter or tables so customers can reach you instantly.
+Business packages give each staff member their own card and profile. Add NFC tags for your counter or tables so customers can reach you instantly.
 
 **What can I use an NFC tag for?**
 Stick it on your shop counter, reception desk, restaurant table, car or phone case. When customers tap it, your profile opens, so they can chat on WhatsApp, follow you, or save your number.
