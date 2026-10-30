@@ -53,7 +53,7 @@ For: small businesses and teams.
 Button: Choose Business
 
 **NFC Tag: ₦10,000**
-A Tapvane sticker for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.
+A hard NFC tag for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.
 Button: Get a tag
 
 ### For small businesses
@@ -109,7 +109,7 @@ Use the package cards from the Home page with these extra details:
 | | Basic | Pro | Business | NFC Tag |
 |---|---|---|---|---|
 | Price | ₦18,000 | ₦30,000 | ₦80,000 (5) / ₦150,000 (10) | ₦10,000 |
-| Card type | PVC | Matte finish | Standard PVC | Sticker tag |
+| Card type | PVC | Matte finish | Standard PVC | Hard NFC tag |
 | Digital profile | Standard | Custom colours + cover image | One per card | Included |
 | Templates | Standard | Standard + premium | Standard | n/a |
 

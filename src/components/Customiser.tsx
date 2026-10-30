@@ -178,7 +178,7 @@ export default function Customiser({ data, initialPackage }: { data: ShopData; i
             <section className="rounded-2xl border border-line bg-charcoal p-6">
               <h2 className="font-display text-2xl text-ivory">NFC Tag</h2>
               <p className="mt-2 text-sm text-muted">
-                A Tapvane sticker for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.
+                A hard NFC tag for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.
               </p>
               <p className="mt-6 text-sm text-muted">Quantity</p>
               <div className="mt-2 flex items-center gap-3">

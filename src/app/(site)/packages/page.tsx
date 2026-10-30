@@ -23,7 +23,7 @@ async function ComparisonTable() {
 
   const rows: { label: string; cells: string[] }[] = [
     { label: "Price", cells: [price("basic"), price("pro"), business || "–", price("tag")] },
-    { label: "Card type", cells: ["PVC", "Matte finish", "Standard PVC", "Sticker tag"] },
+    { label: "Card type", cells: ["PVC", "Matte finish", "Standard PVC", "Hard NFC tag"] },
     { label: "Digital profile", cells: ["Standard", "Custom colours + cover image", "One per card", "Included"] },
     { label: "Templates", cells: ["Standard", "Standard + premium", "Standard", "n/a"] },
   ];

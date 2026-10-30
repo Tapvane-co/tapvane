@@ -74,7 +74,7 @@ function buildCards(products: Product[], stock: StockRow[]): Card[] {
       name: "NFC Tag",
       price: formatNaira(tag.price),
       description:
-        "A Tapvane sticker for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.",
+        "A hard NFC tag for your shop counter, table or phone. Customers tap to see your business, WhatsApp and socials.",
       audience: "",
       button: "Get a tag",
       href: "/customise?package=tag",
